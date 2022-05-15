@@ -9,6 +9,7 @@ using STLang.MemoryLayout;
 using STLang.ErrorManager;
 using STLang.VMInstructions;
 using STLang.Statements;
+using StructuredTextParser.Properties;
 
 namespace STLang.Expressions
 {

@@ -8,7 +8,7 @@ using STLang.Expressions;
 using STLang.MemoryLayout;
 using STLang.ErrorManager;
 using STLang.VMInstructions;
-using LarmiaControl.Evo.Core.StructuredText.Properties;
+using StructuredTextParser.Properties;
 
 namespace STLang.Statements
 {

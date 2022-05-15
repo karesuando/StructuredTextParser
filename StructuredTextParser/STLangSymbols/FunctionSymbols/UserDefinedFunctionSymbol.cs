@@ -13,7 +13,7 @@ using STLang.ParserUtility;
 using STLang.VMInstructions;
 using STLang.POUDefinitions;
 using QUT.Gppg;
-using LarmiaControl.Evo.Core.StructuredText.Properties;
+using StructuredTextParser.Properties;
 
 namespace STLang.Symbols
 {

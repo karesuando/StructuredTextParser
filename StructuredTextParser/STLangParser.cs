@@ -36,6 +36,7 @@ using STLang.ByteCodegenerator;
 using STLang.ConstantPoolHandler;
 using STLang.ImplDependentParams;
 using STLang.RuntimeWrapper;
+using StructuredTextParser.Properties;
 
 namespace STLang.Parser
 {
