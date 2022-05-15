@@ -1,0 +1,385 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{348A7590-F2CB-4562-9B09-466503CDAED7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>StructuredTextParser</RootNamespace>
+    <AssemblyName>StructuredTextParser</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;EXPORT_GPPG DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ByteCodeGenerator.cs" />
+    <Compile Include="ConstantPool.cs" />
+    <Compile Include="DisAssembler.cs" />
+    <Compile Include="GppgSemanticStack.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ShiftReduceParserCode.cs" />
+    <Compile Include="STLangDataTypes\AbstractDataTypes\BitStringType.cs" />
+    <Compile Include="STLangDataTypes\AbstractDataTypes\ElementaryType.cs" />
+    <Compile Include="STLangDataTypes\AbstractDataTypes\OrdinalType.cs" />
+    <Compile Include="STLangDataTypes\AbstractDataTypes\SignedIntegerType.cs" />
+    <Compile Include="STLangDataTypes\AbstractDataTypes\TypeNode.cs" />
+    <Compile Include="STLangDataTypes\AbstractDataTypes\UnsignedIntegerType.cs" />
+    <Compile Include="STLangDataTypes\CompositeDataTypes\ArrayType.cs" />
+    <Compile Include="STLangDataTypes\CompositeDataTypes\FunctionBlockType.cs" />
+    <Compile Include="STLangDataTypes\CompositeDataTypes\StructType.cs" />
+    <Compile Include="STLangDataTypes\ElementaryDataTypes\BitStringTypes\BoolType.cs" />
+    <Compile Include="STLangDataTypes\ElementaryDataTypes\BitStringTypes\ByteType.cs" />
+    <Compile Include="STLangDataTypes\ElementaryDataTypes\BitStringTypes\DWordType.cs" />
+    <Compile Include="STLangDataTypes\ElementaryDataTypes\BitStringTypes\LWordType.cs" />
+    <Compile Include="STLangDataTypes\ElementaryDataTypes\BitStringTypes\WordType.cs" />
+    <Compile Include="STLangDataTypes\ElementaryDataTypes\DateTimeDataTypes\DateTimeType.cs" />
+    <Compile Include="STLangDataTypes\ElementaryDataTypes\DateTimeDataTypes\DateType.cs" />
+    <Compile Include="STLangDataTypes\ElementaryDataTypes\DateTimeDataTypes\TimeOfDayType.cs" />
+    <Compile Include="STLangDataTypes\ElementaryDataTypes\DateTimeDataTypes\TimeType.cs" />
+    <Compile Include="STLangDataTypes\ElementaryDataTypes\EnumeratedType.cs" />
+    <Compile Include="STLangDataTypes\ElementaryDataTypes\RealDataTypes\LRealType.cs" />
+    <Compile Include="STLangDataTypes\ElementaryDataTypes\RealDataTypes\RealType.cs" />
+    <Compile Include="STLangDataTypes\ElementaryDataTypes\SignedIntDataTypes\DIntType.cs" />
+    <Compile Include="STLangDataTypes\ElementaryDataTypes\SignedIntDataTypes\IntType.cs" />
+    <Compile Include="STLangDataTypes\ElementaryDataTypes\SignedIntDataTypes\LIntType.cs" />
+    <Compile Include="STLangDataTypes\ElementaryDataTypes\SignedIntDataTypes\SIntType.cs" />
+    <Compile Include="STLangDataTypes\ElementaryDataTypes\UnSignedIntDataTypes\UDInt.cs" />
+    <Compile Include="STLangDataTypes\ElementaryDataTypes\UnSignedIntDataTypes\UInt.cs" />
+    <Compile Include="STLangDataTypes\ElementaryDataTypes\UnSignedIntDataTypes\ULInt.cs" />
+    <Compile Include="STLangDataTypes\ElementaryDataTypes\UnSignedIntDataTypes\USInt.cs" />
+    <Compile Include="STLangDataTypes\GenericDataTypes\AnyBitType.cs" />
+    <Compile Include="STLangDataTypes\GenericDataTypes\AnyDateType.cs" />
+    <Compile Include="STLangDataTypes\GenericDataTypes\AnyDerivedType.cs" />
+    <Compile Include="STLangDataTypes\GenericDataTypes\AnyElementaryType.cs" />
+    <Compile Include="STLangDataTypes\GenericDataTypes\AnyIntType.cs" />
+    <Compile Include="STLangDataTypes\GenericDataTypes\AnyMagnitudeType.cs" />
+    <Compile Include="STLangDataTypes\GenericDataTypes\AnyNumType.cs" />
+    <Compile Include="STLangDataTypes\GenericDataTypes\AnyRealType.cs" />
+    <Compile Include="STLangDataTypes\GenericDataTypes\AnyStringType.cs" />
+    <Compile Include="STLangDataTypes\GenericDataTypes\AnyType.cs" />
+    <Compile Include="STLangDataTypes\GenericDataTypes\GenericType.cs" />
+    <Compile Include="STLangDataTypes\MiscDataTypes\DerivedType.cs" />
+    <Compile Include="STLangDataTypes\MiscDataTypes\ErrorType.cs" />
+    <Compile Include="STLangDataTypes\MiscDataTypes\UndefinedType.cs" />
+    <Compile Include="STLangDataTypes\MiscDataTypes\VoidType.cs" />
+    <Compile Include="STLangDataTypes\StringDataTypes\StringType.cs" />
+    <Compile Include="STLangDataTypes\StringDataTypes\WStringType.cs" />
+    <Compile Include="STLangErrorHandlers\STLangCompilerError.cs" />
+    <Compile Include="STLangErrorHandlers\STLangErrorManager.cs" />
+    <Compile Include="STLangExpressions\ArithmeticOperators\AbstractBaseClasses\BinaryOperator.cs" />
+    <Compile Include="STLangExpressions\ArithmeticOperators\AbstractBaseClasses\DateTimeOperator.cs" />
+    <Compile Include="STLangExpressions\ArithmeticOperators\AbstractBaseClasses\UnaryOperator.cs" />
+    <Compile Include="STLangExpressions\ArithmeticOperators\AddOperators\DTTAddOperator.cs" />
+    <Compile Include="STLangExpressions\ArithmeticOperators\AddOperators\IntAddOperator.cs" />
+    <Compile Include="STLangExpressions\ArithmeticOperators\AddOperators\LRealAddOperator.cs" />
+    <Compile Include="STLangExpressions\ArithmeticOperators\AddOperators\RealAddOperator.cs" />
+    <Compile Include="STLangExpressions\ArithmeticOperators\AddOperators\TTAddOperator.cs" />
+    <Compile Include="STLangExpressions\ArithmeticOperators\AddOperators\TTODAddOperator.cs" />
+    <Compile Include="STLangExpressions\ArithmeticOperators\AddOperators\UIntAddOperator.cs" />
+    <Compile Include="STLangExpressions\ArithmeticOperators\DivOperators\IntDivOperator.cs" />
+    <Compile Include="STLangExpressions\ArithmeticOperators\DivOperators\LRealDivOperator.cs" />
+    <Compile Include="STLangExpressions\ArithmeticOperators\DivOperators\ModOperator.cs" />
+    <Compile Include="STLangExpressions\ArithmeticOperators\DivOperators\RealDivOperator.cs" />
+    <Compile Include="STLangExpressions\ArithmeticOperators\DivOperators\TimeIntDivOperator.cs" />
+    <Compile Include="STLangExpressions\ArithmeticOperators\DivOperators\TimeLRealDivOperator.cs" />
+    <Compile Include="STLangExpressions\ArithmeticOperators\DivOperators\TimeRealDivOperator.cs" />
+    <Compile Include="STLangExpressions\ArithmeticOperators\MulOperators\IntMulOperator.cs" />
+    <Compile Include="STLangExpressions\ArithmeticOperators\MulOperators\IntTimeMulOperator.cs" />
+    <Compile Include="STLangExpressions\ArithmeticOperators\MulOperators\LRealMulOperator.cs" />
+    <Compile Include="STLangExpressions\ArithmeticOperators\MulOperators\LRealTimeMulOperator.cs" />
+    <Compile Include="STLangExpressions\ArithmeticOperators\MulOperators\RealMulOperator.cs" />
+    <Compile Include="STLangExpressions\ArithmeticOperators\MulOperators\RealTimeMulOperator.cs" />
+    <Compile Include="STLangExpressions\ArithmeticOperators\MulOperators\UIntMulOperator.cs" />
+    <Compile Include="STLangExpressions\ArithmeticOperators\PowOperators\IntPowerOperator.cs" />
+    <Compile Include="STLangExpressions\ArithmeticOperators\PowOperators\LIntPowerOperator.cs" />
+    <Compile Include="STLangExpressions\ArithmeticOperators\PowOperators\LRealPowerOperator.cs" />
+    <Compile Include="STLangExpressions\ArithmeticOperators\PowOperators\RealPowerOperator.cs" />
+    <Compile Include="STLangExpressions\ArithmeticOperators\SubOperators\DateSubOperator.cs" />
+    <Compile Include="STLangExpressions\ArithmeticOperators\SubOperators\DateTimeSubOperator.cs" />
+    <Compile Include="STLangExpressions\ArithmeticOperators\SubOperators\DTTimeSubOperator.cs" />
+    <Compile Include="STLangExpressions\ArithmeticOperators\SubOperators\IntSubOperator.cs" />
+    <Compile Include="STLangExpressions\ArithmeticOperators\SubOperators\LRealSubOperator.cs" />
+    <Compile Include="STLangExpressions\ArithmeticOperators\SubOperators\RealSubOperator.cs" />
+    <Compile Include="STLangExpressions\ArithmeticOperators\SubOperators\TimeSubOperator.cs" />
+    <Compile Include="STLangExpressions\ArithmeticOperators\SubOperators\TODSubOperator.cs" />
+    <Compile Include="STLangExpressions\ArithmeticOperators\SubOperators\TODTimeSubOperator.cs" />
+    <Compile Include="STLangExpressions\ArithmeticOperators\SubOperators\UIntSubOperator.cs" />
+    <Compile Include="STLangExpressions\ArithmeticOperators\UnaryOperators\IntUnaryMinusOperator.cs" />
+    <Compile Include="STLangExpressions\ArithmeticOperators\UnaryOperators\LRealUnaryMinusOperator.cs" />
+    <Compile Include="STLangExpressions\ArithmeticOperators\UnaryOperators\RealUnaryMinusOperator.cs" />
+    <Compile Include="STLangExpressions\ArithmeticOperators\UnaryOperators\TimeUnaryMinusOperator.cs" />
+    <Compile Include="STLangExpressions\BitwiseOperators\BitAndOperator.cs" />
+    <Compile Include="STLangExpressions\BitwiseOperators\BitIOrOperator.cs" />
+    <Compile Include="STLangExpressions\BitwiseOperators\BitNotOperator.cs" />
+    <Compile Include="STLangExpressions\BitwiseOperators\BitXOrOperator.cs" />
+    <Compile Include="STLangExpressions\BitwiseOperators\LeftShiftOperator.cs" />
+    <Compile Include="STLangExpressions\BitwiseOperators\RightShiftOperator.cs" />
+    <Compile Include="STLangExpressions\BitwiseOperators\RotateLeftOperator.cs" />
+    <Compile Include="STLangExpressions\BitwiseOperators\RotateRightOperator.cs" />
+    <Compile Include="STLangExpressions\BooleanOperators\AndOperator.cs" />
+    <Compile Include="STLangExpressions\BooleanOperators\BinaryBoolOperator.cs" />
+    <Compile Include="STLangExpressions\BooleanOperators\OrOperator.cs" />
+    <Compile Include="STLangExpressions\BooleanOperators\XOrOperator.cs" />
+    <Compile Include="STLangExpressions\CompilerOperators\LoadBoolValueOperator.cs" />
+    <Compile Include="STLangExpressions\CompilerOperators\RangeCheckOperator.cs" />
+    <Compile Include="STLangExpressions\Constants\AbstractBaseClasses\Constant.cs" />
+    <Compile Include="STLangExpressions\Constants\AbstractBaseClasses\GenericConstant.cs" />
+    <Compile Include="STLangExpressions\Constants\AbstractBaseClasses\InitializerList.cs" />
+    <Compile Include="STLangExpressions\Constants\AbstractBaseClasses\Int32Constant.cs" />
+    <Compile Include="STLangExpressions\Constants\AbstractBaseClasses\Int64Constant.cs" />
+    <Compile Include="STLangExpressions\Constants\AbstractBaseClasses\UInt32Constant.cs" />
+    <Compile Include="STLangExpressions\Constants\AbstractBaseClasses\UInt64Constant.cs" />
+    <Compile Include="STLangExpressions\Constants\BitStringConstants\BoolConstant.cs" />
+    <Compile Include="STLangExpressions\Constants\BitStringConstants\ByteConstant.cs" />
+    <Compile Include="STLangExpressions\Constants\BitStringConstants\DWordConstant.cs" />
+    <Compile Include="STLangExpressions\Constants\BitStringConstants\LWordConstant.cs" />
+    <Compile Include="STLangExpressions\Constants\BitStringConstants\WordConstant.cs" />
+    <Compile Include="STLangExpressions\Constants\DateTimeConstants\DateConstant.cs" />
+    <Compile Include="STLangExpressions\Constants\DateTimeConstants\DateTimeConstant.cs" />
+    <Compile Include="STLangExpressions\Constants\DateTimeConstants\TimeConstant.cs" />
+    <Compile Include="STLangExpressions\Constants\DateTimeConstants\TimeOfDayConstant.cs" />
+    <Compile Include="STLangExpressions\Constants\EnumConstants\EnumConstant.cs" />
+    <Compile Include="STLangExpressions\Constants\InitializerLists\ArrayInitializer.cs" />
+    <Compile Include="STLangExpressions\Constants\InitializerLists\ArrayOfStructInitializer.cs" />
+    <Compile Include="STLangExpressions\Constants\InitializerLists\DefaultArrayInitializer.cs" />
+    <Compile Include="STLangExpressions\Constants\InitializerLists\DefaultArrayOfStructInitializer.cs" />
+    <Compile Include="STLangExpressions\Constants\InitializerLists\DefaultFunctionBlockInitializer.cs" />
+    <Compile Include="STLangExpressions\Constants\InitializerLists\DefaultStructInitializer.cs" />
+    <Compile Include="STLangExpressions\Constants\InitializerLists\FlattenedInitializerList.cs" />
+    <Compile Include="STLangExpressions\Constants\InitializerLists\FunctionBlockInitializer.cs" />
+    <Compile Include="STLangExpressions\Constants\InitializerLists\InitializerSequence.cs" />
+    <Compile Include="STLangExpressions\Constants\InitializerLists\StructInitializer.cs" />
+    <Compile Include="STLangExpressions\Constants\RealConstants\LRealConstant.cs" />
+    <Compile Include="STLangExpressions\Constants\RealConstants\RealConstant.cs" />
+    <Compile Include="STLangExpressions\Constants\SignedIntConstants\DIntConstant.cs" />
+    <Compile Include="STLangExpressions\Constants\SignedIntConstants\IntConstant.cs" />
+    <Compile Include="STLangExpressions\Constants\SignedIntConstants\LIntConstant.cs" />
+    <Compile Include="STLangExpressions\Constants\SignedIntConstants\SIntConstant.cs" />
+    <Compile Include="STLangExpressions\Constants\StringConstants\StringConstant.cs" />
+    <Compile Include="STLangExpressions\Constants\StringConstants\WStringConstant.cs" />
+    <Compile Include="STLangExpressions\Constants\UnsignedIntConstants\UDIntConstant.cs" />
+    <Compile Include="STLangExpressions\Constants\UnsignedIntConstants\UIntConstant.cs" />
+    <Compile Include="STLangExpressions\Constants\UnsignedIntConstants\ULIntConstant.cs" />
+    <Compile Include="STLangExpressions\Constants\UnsignedIntConstants\USIntConstant.cs" />
+    <Compile Include="STLangExpressions\ConversionOperators\ConversionOperator.cs" />
+    <Compile Include="STLangExpressions\ConversionOperators\GenericTypeConvOperator.cs" />
+    <Compile Include="STLangExpressions\ConversionOperators\Int2LIntOperator.cs" />
+    <Compile Include="STLangExpressions\ConversionOperators\Int2LRealOperator.cs" />
+    <Compile Include="STLangExpressions\ConversionOperators\Int2RealOperator.cs" />
+    <Compile Include="STLangExpressions\ConversionOperators\LInt2LRealOperator.cs" />
+    <Compile Include="STLangExpressions\ConversionOperators\LInt2RealOperator.cs" />
+    <Compile Include="STLangExpressions\ConversionOperators\LReal2DWordOperator.cs" />
+    <Compile Include="STLangExpressions\ConversionOperators\LReal2IntOperator.cs" />
+    <Compile Include="STLangExpressions\ConversionOperators\LReal2RealOperator.cs" />
+    <Compile Include="STLangExpressions\ConversionOperators\Real2IntOperator.cs" />
+    <Compile Include="STLangExpressions\ConversionOperators\Real2LRealOperator.cs" />
+    <Compile Include="STLangExpressions\ConversionOperators\UInt2LRealOperator.cs" />
+    <Compile Include="STLangExpressions\MiscExpressions\ErrorExpression.cs" />
+    <Compile Include="STLangExpressions\MiscExpressions\Expression.cs" />
+    <Compile Include="STLangExpressions\MiscExpressions\FunctionName.cs" />
+    <Compile Include="STLangExpressions\POUCalls\ExtensibleFunctionCall.cs" />
+    <Compile Include="STLangExpressions\POUCalls\FunctionBlockCall.cs" />
+    <Compile Include="STLangExpressions\POUCalls\MUXFunctionCall.cs" />
+    <Compile Include="STLangExpressions\POUCalls\SELFunctionCall.cs" />
+    <Compile Include="STLangExpressions\POUCalls\StandardFunctionCall.cs" />
+    <Compile Include="STLangExpressions\POUCalls\UserDefinedFunctionCall.cs" />
+    <Compile Include="STLangExpressions\POUCalls\VirtualMachineFunctionCall.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\AbstractBaseClasses\RelationOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\AbstractBaseClasses\StringRelationOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\AbstractBaseClasses\WStringRelationOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\EqlRelationOperators\DateTimeEqlOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\EqlRelationOperators\FloatEqlOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\EqlRelationOperators\IntEqlOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\EqlRelationOperators\LRealEqlOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\EqlRelationOperators\StringEqlOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\EqlRelationOperators\TimeEqlOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\EqlRelationOperators\TimeOfDayEqlOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\EqlRelationOperators\WStringEqlOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\GeqRelationOperators\DateTimeGeqOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\GeqRelationOperators\FloatGeqOpearator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\GeqRelationOperators\IntGeqOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\GeqRelationOperators\LRealGeqOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\GeqRelationOperators\StringGeqOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\GeqRelationOperators\TimeGeqOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\GeqRelationOperators\TimeOfDayGeqOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\GeqRelationOperators\WStringGeqOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\GtrRelationOperators\DateTimeGtrOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\GtrRelationOperators\FloatGtrOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\GtrRelationOperators\IntGtrOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\GtrRelationOperators\LRealGtrOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\GtrRelationOperators\StringGtrOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\GtrRelationOperators\TimeGtrOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\GtrRelationOperators\TimeOfDayGtrOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\GtrRelationOperators\WStringGtrOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\LeqRelationOperators\DateTimeLeqOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\LeqRelationOperators\FloatLeqOpearator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\LeqRelationOperators\IntLeqOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\LeqRelationOperators\LRealLeqOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\LeqRelationOperators\StringLeqOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\LeqRelationOperators\TimeLeqOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\LeqRelationOperators\TimeOfDayLeqOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\LeqRelationOperators\WStringLeqOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\LesRelationOperators\DateTimeLesOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\LesRelationOperators\FloatLesOpearator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\LesRelationOperators\IntLesOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\LesRelationOperators\LRealLesOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\LesRelationOperators\StringLesOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\LesRelationOperators\TimeLesOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\LesRelationOperators\TimeOfDayLesOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\LesRelationOperators\WStringLesOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\NeqRelationOperators\DTNeqOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\NeqRelationOperators\FloatNeqOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\NeqRelationOperators\IntNeqOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\NeqRelationOperators\LRealNeqOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\NeqRelationOperators\StringNeqOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\NeqRelationOperators\TimeNeqOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\NeqRelationOperators\TODNeqOperator.cs" />
+    <Compile Include="STLangExpressions\RelationOperators\NeqRelationOperators\WStringNeqOperatorcs.cs" />
+    <Compile Include="STLangExpressions\Subranges\BitStringSubrange.cs" />
+    <Compile Include="STLangExpressions\Subranges\EnumSubrange.cs" />
+    <Compile Include="STLangExpressions\Subranges\ErrorSubrange.cs" />
+    <Compile Include="STLangExpressions\Subranges\IntSubRange.cs" />
+    <Compile Include="STLangExpressions\Subranges\SubRange.cs" />
+    <Compile Include="STLangExpressions\Subranges\UIntSubrange.cs" />
+    <Compile Include="STLangExpressions\Variables\MemoryObject.cs" />
+    <Compile Include="STLangExtensions\DateTimeExtension.cs" />
+    <Compile Include="STLangExtensions\DoubleExtension.cs" />
+    <Compile Include="STLangExtensions\FloatExtension.cs" />
+    <Compile Include="STLangExtensions\IntExtension.cs" />
+    <Compile Include="STLangExtensions\ListExtension.cs" />
+    <Compile Include="STLangExtensions\LongExtension.cs" />
+    <Compile Include="STLangExtensions\ShortExtension.cs" />
+    <Compile Include="STLangExtensions\StringExtensions.cs" />
+    <Compile Include="STLangExtensions\TimeSpanExtension.cs" />
+    <Compile Include="STLangImplDepParams.cs" />
+    <Compile Include="STLangKeywords.cs" />
+    <Compile Include="STLangMemoryLayout\ElementaryLocation.cs" />
+    <Compile Include="STLangMemoryLayout\MemoryLocation.cs" />
+    <Compile Include="STLangMemoryLayout\RegisterConstant.cs" />
+    <Compile Include="STLangMemoryLayout\RegisterVariable.cs" />
+    <Compile Include="STLangMemoryLayout\ROMemoryLayoutManager.cs" />
+    <Compile Include="STLangMemoryLayout\RWMemoryLayoutManager.cs" />
+    <Compile Include="STLangMemoryLayout\StringLocation.cs" />
+    <Compile Include="STLangMemoryLayout\StructLocation.cs" />
+    <Compile Include="STLangMemoryLayout\UndefinedLocation.cs" />
+    <Compile Include="STLangParser.cs" />
+    <Compile Include="STLangParserUtility\DataTypeSpec.cs" />
+    <Compile Include="STLangParserUtility\FunctionBlockCall.cs" />
+    <Compile Include="STLangParserUtility\FunctionCall.cs" />
+    <Compile Include="STLangParserUtility\IndexedVariable.cs" />
+    <Compile Include="STLangParserUtility\InputParameter.cs" />
+    <Compile Include="STLangParserUtility\OutputParameter.cs" />
+    <Compile Include="STLangParserUtility\POUCall.cs" />
+    <Compile Include="STLangParserUtility\POUParameter.cs" />
+    <Compile Include="STLangParserUtility\StructDeclaration.cs" />
+    <Compile Include="STLangParserUtility\StructMemberDeclaration.cs" />
+    <Compile Include="STLangParserUtility\StructMemberInit.cs" />
+    <Compile Include="STLangPOUDefinitions\StandardFunctionDefinition.cs" />
+    <Compile Include="STLangPOUDefinitions\UserDefinedPOUDefinition.cs" />
+    <Compile Include="STLangScanner.cs" />
+    <Compile Include="STLangStatements\ControlFlowStatments\AssignmentStatement.cs" />
+    <Compile Include="STLangStatements\ControlFlowStatments\CaseLable.cs" />
+    <Compile Include="STLangStatements\ControlFlowStatments\CaseStatement.cs" />
+    <Compile Include="STLangStatements\ControlFlowStatments\CompoundAssignmentStat.cs" />
+    <Compile Include="STLangStatements\ControlFlowStatments\ElseIfStatement.cs" />
+    <Compile Include="STLangStatements\ControlFlowStatments\EmptyStatement.cs" />
+    <Compile Include="STLangStatements\ControlFlowStatments\ExitStatement.cs" />
+    <Compile Include="STLangStatements\ControlFlowStatments\ForStatement.cs" />
+    <Compile Include="STLangStatements\ControlFlowStatments\FunctionBlockCall.cs" />
+    <Compile Include="STLangStatements\ControlFlowStatments\FunctionResultStatement.cs" />
+    <Compile Include="STLangStatements\ControlFlowStatments\IfStatement.cs" />
+    <Compile Include="STLangStatements\ControlFlowStatments\RepeatStatement.cs" />
+    <Compile Include="STLangStatements\ControlFlowStatments\ReturnStatement.cs" />
+    <Compile Include="STLangStatements\ControlFlowStatments\SimpleAssignmentStat.cs" />
+    <Compile Include="STLangStatements\ControlFlowStatments\StatementList.cs" />
+    <Compile Include="STLangStatements\ControlFlowStatments\STLangStatements.cs" />
+    <Compile Include="STLangStatements\ControlFlowStatments\WhileStatement.cs" />
+    <Compile Include="STLangStatements\DeclarationStatements\ArrayOfStructVarDeclStat.cs" />
+    <Compile Include="STLangStatements\DeclarationStatements\ArrayVarDeclStat.cs" />
+    <Compile Include="STLangStatements\DeclarationStatements\DeclarationStatement.cs" />
+    <Compile Include="STLangStatements\DeclarationStatements\ElementaryVarDeclStat.cs" />
+    <Compile Include="STLangStatements\DeclarationStatements\FunctionBlockVarDeclStat.cs" />
+    <Compile Include="STLangStatements\DeclarationStatements\InputOutputParamDeclStat.cs" />
+    <Compile Include="STLangStatements\DeclarationStatements\LocalVarDeclStat.cs" />
+    <Compile Include="STLangStatements\DeclarationStatements\POUVarDeclarations.cs" />
+    <Compile Include="STLangStatements\DeclarationStatements\StructVarDeclStat.cs" />
+    <Compile Include="STLangStatements\DeclarationStatements\VarInitDeclaration.cs" />
+    <Compile Include="STLangSymbols\AbstractSymbolClasses\CompoundInstanceSymbol.cs" />
+    <Compile Include="STLangSymbols\AbstractSymbolClasses\InstanceSymbol.cs" />
+    <Compile Include="STLangSymbols\AbstractSymbolClasses\ProgramOrganizationUnitSymbol.cs" />
+    <Compile Include="STLangSymbols\AbstractSymbolClasses\STLangSymbols.cs" />
+    <Compile Include="STLangSymbols\ExtensibleFunctionSymbols\ExtensibleFunctionSymbol.cs" />
+    <Compile Include="STLangSymbols\ExtensibleFunctionSymbols\MAXFunctionSymbol.cs" />
+    <Compile Include="STLangSymbols\ExtensibleFunctionSymbols\MINFunctionSymbol.cs" />
+    <Compile Include="STLangSymbols\ExtensibleFunctionSymbols\MUXFunctionSymbol.cs" />
+    <Compile Include="STLangSymbols\FunctionBlockSymbols\StandardFunctionBlockSymbol.cs" />
+    <Compile Include="STLangSymbols\FunctionBlockSymbols\UndefinedFunctionBlockSymbol.cs" />
+    <Compile Include="STLangSymbols\FunctionBlockSymbols\UserDefinedFunctionBlockSymbol.cs" />
+    <Compile Include="STLangSymbols\FunctionSymbols\BitShiftFunctionSymbol.cs" />
+    <Compile Include="STLangSymbols\FunctionSymbols\SELFunctionSymbol.cs" />
+    <Compile Include="STLangSymbols\FunctionSymbols\StandardFunctionSymbol.cs" />
+    <Compile Include="STLangSymbols\FunctionSymbols\UndefinedFunctionSymbol.cs" />
+    <Compile Include="STLangSymbols\FunctionSymbols\UserDefinedFunctionSymbol.cs" />
+    <Compile Include="STLangSymbols\FunctionSymbols\VirtualMachineInstructionSymbol.cs" />
+    <Compile Include="STLangSymbols\MiscSymbols\ArrayInstanceSymbol.cs" />
+    <Compile Include="STLangSymbols\MiscSymbols\BCDConverterSymbol.cs" />
+    <Compile Include="STLangSymbols\MiscSymbols\DirectRepVarSymbol.cs" />
+    <Compile Include="STLangSymbols\MiscSymbols\ElementaryVariableSymbol.cs" />
+    <Compile Include="STLangSymbols\MiscSymbols\EnumSymbol.cs" />
+    <Compile Include="STLangSymbols\MiscSymbols\FieldSymbol.cs" />
+    <Compile Include="STLangSymbols\MiscSymbols\FunctionBlockInstanceSymbol.cs" />
+    <Compile Include="STLangSymbols\MiscSymbols\StructInstanceSymbol.cs" />
+    <Compile Include="STLangSymbols\MiscSymbols\TypeConverterSymbol.cs" />
+    <Compile Include="STLangSymbols\MiscSymbols\TypeNameSymbol.cs" />
+    <Compile Include="STLangSymbols\MiscSymbols\VariableAttributes.cs" />
+    <Compile Include="STLangSymbolTable.cs" />
+    <Compile Include="STLangTokens\ConstantTokens.cs" />
+    <Compile Include="STLangTokens\TokenDate.cs" />
+    <Compile Include="STLangTokens\TokenDateTime.cs" />
+    <Compile Include="STLangTokens\TokenDirectVar.cs" />
+    <Compile Include="STLangTokens\TokenDouble.cs" />
+    <Compile Include="STLangTokens\TokenInt.cs" />
+    <Compile Include="STLangTokens\TokenTime.cs" />
+    <Compile Include="STLangTokens\TokenTOD.cs" />
+    <Compile Include="STLangTokens\TokenTypedEnum.cs" />
+    <Compile Include="STLangTokens\TokenTypedInt.cs" />
+    <Compile Include="STLangTokens\TokenTypedReal.cs" />
+    <Compile Include="STLangVMInstructions.cs" />
+    <Compile Include="STLangWrapperClasses\STLangParserWrapper.cs" />
+    <Compile Include="STLangWrapperClasses\STLangRuntimeWrapper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="STLang.l" />
+    <None Include="STLang.y" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
