@@ -25,6 +25,10 @@ namespace STLang.Symbols
         {
             get { return true; }
         }
+        public override POUType POUType
+        {
+            get { return POUType.FUNCTION; }
+        }
 
         public override string TypeName
         {

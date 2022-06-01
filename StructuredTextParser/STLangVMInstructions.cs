@@ -10,7 +10,7 @@ namespace STLang.VMInstructions
     //
     public enum VirtualMachineInstruction : byte
     {
-        NOOP,     // NO OPeration
+       NOOP,     // NO OPeration
         IADD,     // Integer ADD
         LADD,     // Long integer ADD
         FADD,     // Float ADD
@@ -29,12 +29,15 @@ namespace STLang.VMInstructions
         DDIV,     // Double DIVide
         CALL,     // CALL standard library function
         IMOD,     // Int MODulus
-        FMOD,     // Float MODuluus
-        DMOD,     // Double MODulus
+        LMOD,     // LInt MODulus
         INEG,     // Int unary minus
         LNEG,     // Long unary minus
         FNEG,     // Float unary minus
         DNEG,     // Double unary minus
+        ISQR,
+        FSQR,
+        DSQR,
+        LSQR,
         IJGT,     // Int Jump if Greater Than
         LJGT,     // Long Jump Greater Than
         FJGT,     // Float Jump if Greater Than
@@ -179,14 +182,14 @@ namespace STLang.VMInstructions
         DLOD,
         SLOD, // (ascii) String LOaD
         WSLOD, // Unicode string LOaD
-        BSTO,
+        BSTO,  
         ISTO,
         WSTO,
         LSTO,   // Long Store
         FSTO,   // Float store
         DSTO,   // Double store
         SSTO,   // String STOre
-        USTO,   // Unicode string STOre
+        WSSTO,  // Unicode string STOre
         BLODX,  // Sbyte LOaD indeXed
         ILODX,  // Int LOaD indeXed
         WLODX,  // Dint LOaD indeXed
@@ -194,7 +197,7 @@ namespace STLang.VMInstructions
         FLODX,  // Float LOaD indeXed
         DLODX,  // Double LOaD indeXed
         SLODX,  // String LOaD indeXed
-        ULODX,  // Unicode LOaD indeXed
+        WSLODX, // Unicode LOaD indeXed
         BSTOX,  // Byte STOre indeXed
         ISTOX,  // Int STOre indeXed
         WSTOX,  // Dint Store indeXed
@@ -202,16 +205,12 @@ namespace STLang.VMInstructions
         FSTOX,  // Float STOre indeXed
         DSTOX,  // Double STOre indeXed
         SSTOX,  // String STOre indeXed
-        WSSTOX,  // Unicode STOre indeXed
+        WSSTOX,  // Wide String (Unicode) STOre indeXed
         RETN,    // RETurN from subroutine
         IDUPL,        // Int DUPLicate (Push a copy of top value)
         LDUPL,        // Long DUPLicate 
         FDUPL,        // Float DUPLicate 
         DDUPL,        // Double DUPLicate 
-        ISQR,         // Int SQuaRe
-        LSQR,         // Long SQuaRe
-        FSQR,         // Float SQuaRe
-        DSQR,         // Double SQuaRe
         FINV,         // Float INVert
         DINV,         // Double INVert
         WCONST,       // DINT CONSTant
@@ -243,7 +242,6 @@ namespace STLang.VMInstructions
         ROM_COPY,     // Read Only Memory to memory COPY
         MEM_SETB,     // MEMory SET to Bytes (+ parameter)
         MEM_SETZ,     // MEMory SET to Zero
-        CONV,         // Convert from type A to type B
         F2I,          // Float to Int
         F2L,          // Float to Long
         F2D,          // Float to Double
@@ -256,7 +254,13 @@ namespace STLang.VMInstructions
         L2I,          // Long to Int
         L2D,          // Long to double
         L2F,          // Long to float
-        COPY_STACK    // COPY STACK to memory
+        I2B,          // Integer to unsigned byte
+        I2C,          // Integer to signed byte
+        I2S,          // Integer to short
+        I2US,         // Integer to unsigned short
+        I2UI,         // (signed) Integer to unsigned integer
+        CONV,
+        EXE_ONCE      // EXEcute block of code ONCE
     }
 }
 

@@ -84,14 +84,13 @@ namespace STLang.DisAssemble
                 case VirtualMachineInstruction.FSTO:
                 case VirtualMachineInstruction.DSTO:
                 case VirtualMachineInstruction.SSTO:
-                case VirtualMachineInstruction.USTO:
+                case VirtualMachineInstruction.WSSTO:
                 case VirtualMachineInstruction.ILODX:
                 case VirtualMachineInstruction.WLODX:
                 case VirtualMachineInstruction.LLODX:
                 case VirtualMachineInstruction.FLODX:
                 case VirtualMachineInstruction.DLODX:
                 case VirtualMachineInstruction.SLODX:
-                case VirtualMachineInstruction.ULODX:
                 case VirtualMachineInstruction.BSTOX:
                 case VirtualMachineInstruction.ISTOX:
                 case VirtualMachineInstruction.WSTOX:

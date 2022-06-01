@@ -220,9 +220,9 @@ namespace STLang.ByteCodegenerator
             byteCode.Add(instruction);
         }
 
-        protected void SetExecutableType(POUType type)
+        public static void StorePOUType(POUType type)
         {
-            fileHeader.ExecutableType = (int)type;
+            fileHeader.POUType = type;
         }
 
         // BackPatch(int pc, uint jumpTarget)
@@ -325,17 +325,19 @@ namespace STLang.ByteCodegenerator
             return dlc;
         }
 
-        protected enum POUType : uint
-        {
-            FUNCTION = 0xadeafdad,
-            FUNCTION_BLOCK = 0xabaddeed
-        }
+        //protected enum POUType : uint
+        //{
+        //    FUNCTION = 0x2fc9a35d,
+        //    FUNCTION_BLOCK = 0x5f3ec8a2,
+        //    CLASS = 0xf1e7ba94,
+        //    PROGRAM = 0x61ac50b3
+        //}
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
         private struct ExternalPOUSymbol
         {
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 35)]
-            public String Name;
+            public string Name;
 
             [MarshalAs(UnmanagedType.U4)]
             public POUType Type;
@@ -404,7 +406,7 @@ namespace STLang.ByteCodegenerator
         private struct IOParameter
         {
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
-            public String Name;
+            public string Name;
 
             [MarshalAs(UnmanagedType.I4)]
             public int Index;
@@ -422,11 +424,11 @@ namespace STLang.ByteCodegenerator
             [MarshalAs(UnmanagedType.U4)]
             public uint MajorVersion;
 
-            [MarshalAs(UnmanagedType.I4)]
-            public int ExecutableType;
+            [MarshalAs(UnmanagedType.U4)]
+            public POUType POUType;
 
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
-            public String POUName;
+            public string POUName;
 
             [MarshalAs(UnmanagedType.I4)]
             public int RODataSegmentSize;

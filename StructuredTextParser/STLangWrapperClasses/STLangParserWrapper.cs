@@ -18,25 +18,6 @@ namespace STLang.WrapperClass
             this.errorHandler = new ErrorHandler();
         }
 
-        [DllImport("STLangRuntime", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        //[DllImport("libSTLangRuntime.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        static extern bool Load();
-
-        public bool LoadDll(out String ErrMsg)
-        {
-            ErrMsg = "";
-            try
-            {
-                return (Load());
-            }
-            catch(Exception e)
-            {
-                ErrMsg = e.Message;
-                return (false);
-            }
-        }
-
-
         public bool TryParse(string pouString, out STLangPOUObject pouObjectHandle, bool overWrite = false)
         {
             this.errorHandler = new ErrorHandler();

@@ -15,6 +15,11 @@ namespace STLang.Symbols
             this.parameters = new List<ElementaryVariableSymbol>();
         }
 
+        public override POUType POUType
+        {
+            get { return POUType.FUNCTION_BLOCK; }
+        }
+
         public override string TypeName { get { return "odeklarerad funktionsblock"; } }
 
         public override Expression MakeSyntaxTreeNode(LexLocation loc)

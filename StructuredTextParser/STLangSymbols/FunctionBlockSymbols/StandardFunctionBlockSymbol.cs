@@ -59,6 +59,10 @@ namespace STLang.Symbols
             get { return "funktionsblock"; } 
         }
 
+        public override POUType POUType {
+            get { return POUType.FUNCTION; } 
+        }
+
         public bool LookUp(string ident, out InstanceSymbol member)
         {
             ident = ident.ToUpper();

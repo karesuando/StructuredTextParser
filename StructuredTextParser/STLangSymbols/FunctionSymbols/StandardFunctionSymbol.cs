@@ -30,6 +30,10 @@ namespace STLang.Symbols
         { 
             get { return "standardfunktion"; } 
         }
+        public override POUType POUType
+        {
+            get { return POUType.FUNCTION; }
+        }
 
         public override Expression MakeSyntaxTreeNode(LexLocation loc)
         {

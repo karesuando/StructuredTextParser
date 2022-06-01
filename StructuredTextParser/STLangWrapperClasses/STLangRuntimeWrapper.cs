@@ -21,7 +21,7 @@ namespace STLang.RuntimeWrapper
         }
 
         
-        [DllImport("STLangRuntime.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        [DllImport("STLangRuntime.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
 
         static extern int CreatePOUObject(IntPtr name, byte[] header, uint[] instructions, byte[] rwDataSegInit, 
                                           byte[] stringVarData, byte[] readOnlyDataSegment, byte[] inputs, byte[] outputs, 
@@ -41,33 +41,40 @@ namespace STLang.RuntimeWrapper
             return new STLangPOUObject(inputCount, outputCount, handle);
         }
 
-        [DllImport("STLangRuntime.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        public static extern int CreatePOUObject(StringBuilder executable);
+        [DllImport("STLangRuntime.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr CreatePOUObject(StringBuilder executable);
+
+        [DllImport("STLangRuntime.dll", CharSet = CharSet.Unicode)]
+        public static extern int GetStringLength(StringBuilder str);
 
         public static STLangPOUObject Create(string execFile)
         {
-            StringBuilder executable = new StringBuilder(execFile);
-            int handle = 0;
+            IntPtr executable = Marshal.AllocHGlobal(execFile.Length);
+            IntPtr handle;
             int inputCount = 0;
             int outputCount = 0;
+            string s = "This is a string!";
+            IntPtr namePtr = Marshal.AllocHGlobal(s.Length);
+            ASCIIEncoding encoding = new ASCIIEncoding();
+            byte[] nameBytes = encoding.GetBytes(s);
+            Marshal.Copy(nameBytes, 0, executable, nameBytes.Length);
+           
             try
             {
-                handle = CreatePOUObject(executable);
-                inputCount = GetInPutCount(handle);
-                outputCount = GetOutPutCount(handle);
+                int length = GetStringLength(new StringBuilder(s));
+               // inputCount = GetInPutCount(handle);
+              //  outputCount = GetOutPutCount(handle);
             }
             catch (SystemException e)
             {
                 string msg = e.Message;
-                int i;
-
-                i = 0;
+                return null;
             }
-            return new STLangPOUObject(inputCount, outputCount, handle);
+            return new STLangPOUObject(inputCount, outputCount, 0);
         }
 
-        [DllImport("STLangRuntime.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        static extern void GetPOUName(IntPtr intPtr, int POUHandle);
+        [DllImport("STLangRuntime.dll", CallingConvention = CallingConvention.Cdecl)]
+        static extern void GetPOUName(IntPtr intPtr, long POUHandle);
 
         public string POUName
         {
@@ -82,7 +89,7 @@ namespace STLang.RuntimeWrapper
         }
 
         [DllImport("STLangRuntime.dll", CallingConvention = CallingConvention.Cdecl)]
-        static extern int GetInPutCount(int POUHandle);
+        static extern int GetInPutCount(long POUHandle);
 
         public int InputCount
         {
@@ -90,7 +97,7 @@ namespace STLang.RuntimeWrapper
         }
 
         [DllImport("STLangRuntime.dll", CallingConvention = CallingConvention.Cdecl)]   
-        static extern int GetOutPutCount(int POUHandle);
+        static extern int GetOutPutCount(long POUHandle);
 
         public int GetOutputCount
         {

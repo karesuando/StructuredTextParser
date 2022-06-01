@@ -40,6 +40,11 @@ namespace STLang.Symbols
             get { return true; } 
         }
 
+        public override POUType POUType
+        {
+            get { return POUType.FUNCTION; }
+        }
+
         public override Expression MakeSyntaxTreeNode(LexLocation loc)
         {
             return new FunctionName(this);
@@ -196,7 +201,7 @@ namespace STLang.Symbols
 
         private bool SignatureExists(string signature)
         {
-            return this.pouDefinitions.Find(f => f.Signature == signature) != null;
+            return this.pouDefinitions.Find(pou => pou.Signature == signature) != null;
         }
 
         private List<MatchedFunction> GetBestMatchingOverloadedFunction(List<Expression> actuals)

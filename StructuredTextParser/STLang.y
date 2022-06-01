@@ -9266,6 +9266,7 @@ private SubRange MakeSubrange(Expression lower, Expression upper, LexLocation lo
                 this.GenerateInitLocalVars(varDeclarations, pouSymbol.IsFunction);
                 this.GenerateStatementList(pou.Body);
 				ByteCodeGenerator.StorePOUName(pou.Name);
+				ByteCodeGenerator.StorePOUType(pou.POUType);
 				ByteCodeGenerator.StoreRWDataSegmentInfo(rwMemoryManager);
 				ByteCodeGenerator.StoreConstantTable(constantTable);
 				ByteCodeGenerator.StoreRODataSegmentInfo(roMemoryManager);
@@ -9300,6 +9301,7 @@ private SubRange MakeSubrange(Expression lower, Expression upper, LexLocation lo
                 this.GenerateInitLocalVars(varDeclarations, pouSymbol.IsFunction);
                 this.GenerateStatementList(pou.Body);
 				ByteCodeGenerator.StorePOUName(pou.Name);
+				ByteCodeGenerator.StorePOUType(pou.POUType);
 				ByteCodeGenerator.StoreRWDataSegmentInfo(rwMemoryManager);
 				ByteCodeGenerator.StoreConstantTable(constantTable);
 				ByteCodeGenerator.StoreRODataSegmentInfo(roMemoryManager);

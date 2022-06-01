@@ -447,7 +447,7 @@ namespace STLang.Expressions
                 int bytes = (int)this.DataType.Size;
                 this.StoreInstruction(VirtualMachineInstruction.ICONST, bytes);
                 if (!this.isCallByReference)
-                    this.StoreInstruction(VirtualMachineInstruction.USTO, index);
+                    this.StoreInstruction(VirtualMachineInstruction.WSSTO, index);
                 else
                 {
                     this.StoreInstruction(VirtualMachineInstruction.WLOD, index);
@@ -499,7 +499,7 @@ namespace STLang.Expressions
                 else if (dataType.IsStringType)
                     this.StoreInstruction(VirtualMachineInstruction.SLODX, index);
                 else if (dataType.IsWStringType)
-                    this.StoreInstruction(VirtualMachineInstruction.ULODX, index);
+                    this.StoreInstruction(VirtualMachineInstruction.WSLODX, index);
                 else if (dataType.IsArrayType)
                 {
                     if (!this.symbol.IsArrayInstance)
@@ -676,7 +676,7 @@ namespace STLang.Expressions
                 else
                 {
                     this.StoreInstruction(VirtualMachineInstruction.WLOD, index);
-                    this.StoreInstruction(VirtualMachineInstruction.ULODX, 0);
+                    this.StoreInstruction(VirtualMachineInstruction.WSLODX, 0);
                 }
             }
             else

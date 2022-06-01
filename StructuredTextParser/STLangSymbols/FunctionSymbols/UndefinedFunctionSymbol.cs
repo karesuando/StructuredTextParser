@@ -29,5 +29,9 @@ namespace STLang.Symbols
         {
             get { return "funktion"; }
         }
+        public override POUType POUType
+        {
+            get { return POUType.FUNCTION; }
+        }
     }
 }
