@@ -21,7 +21,7 @@ namespace STLang.RuntimeWrapper
         }
 
         
-        [DllImport("STLangRuntime.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
+        [DllImport(@"C:\Users\cyber\Source\Repos\StructuredTextRuntime\Debug\StructuredTextRuntime.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
 
         static extern int CreatePOUObject(IntPtr name, byte[] header, uint[] instructions, byte[] rwDataSegInit, 
                                           byte[] stringVarData, byte[] readOnlyDataSegment, byte[] inputs, byte[] outputs, 
@@ -41,11 +41,9 @@ namespace STLang.RuntimeWrapper
             return new STLangPOUObject(inputCount, outputCount, handle);
         }
 
-        [DllImport("STLangRuntime.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(@"C:\Users\cyber\Source\Repos\StructuredTextRuntime\Debug\StructuredTextRuntime.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr CreatePOUObject(StringBuilder executable);
 
-        [DllImport("STLangRuntime.dll", CharSet = CharSet.Unicode)]
-        public static extern int GetStringLength(StringBuilder str);
 
         public static STLangPOUObject Create(string execFile)
         {
@@ -61,7 +59,6 @@ namespace STLang.RuntimeWrapper
            
             try
             {
-                int length = GetStringLength(new StringBuilder(s));
                // inputCount = GetInPutCount(handle);
               //  outputCount = GetOutPutCount(handle);
             }
@@ -73,7 +70,7 @@ namespace STLang.RuntimeWrapper
             return new STLangPOUObject(inputCount, outputCount, 0);
         }
 
-        [DllImport("STLangRuntime.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(@"C:\Users\cyber\Source\Repos\StructuredTextRuntime\Debug\StructuredTextRuntime.dll", CallingConvention = CallingConvention.Cdecl)]
         static extern void GetPOUName(IntPtr intPtr, long POUHandle);
 
         public string POUName
@@ -88,7 +85,7 @@ namespace STLang.RuntimeWrapper
             }
         }
 
-        [DllImport("STLangRuntime.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(@"C:\Users\cyber\Source\Repos\StructuredTextRuntime\Debug\StructuredTextRuntime.dll", CallingConvention = CallingConvention.Cdecl)]
         static extern int GetInPutCount(long POUHandle);
 
         public int InputCount
@@ -96,7 +93,7 @@ namespace STLang.RuntimeWrapper
             get { return GetInPutCount(this.pouHandle); }
         }
 
-        [DllImport("STLangRuntime.dll", CallingConvention = CallingConvention.Cdecl)]   
+        [DllImport(@"C:\Users\cyber\Source\Repos\StructuredTextRuntime\Debug\StructuredTextRuntime.dll", CallingConvention = CallingConvention.Cdecl)]   
         static extern int GetOutPutCount(long POUHandle);
 
         public int GetOutputCount
@@ -104,7 +101,7 @@ namespace STLang.RuntimeWrapper
             get { return GetOutPutCount(this.pouHandle); }
         }
 
-        [DllImport("STLangRuntime.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(@"C:\Users\cyber\Source\Repos\StructuredTextRuntime\Debug\StructuredTextRuntime.dll", CallingConvention = CallingConvention.Cdecl)]
         static extern double GetOutputValue(StringBuilder OutPut, int POUHandle);
 
         public double GetOutputValue(string output)
@@ -114,7 +111,7 @@ namespace STLang.RuntimeWrapper
             return result;
         }
 
-        [DllImport("STLangRuntime.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(@"C:\Users\cyber\Source\Repos\StructuredTextRuntime\Debug\StructuredTextRuntime.dll", CallingConvention = CallingConvention.Cdecl)]
         static extern void SetOutputValue(StringBuilder OutPut, double Value, int POUHandle);
 
         public void SetOutputValue(string output, double value)
@@ -123,7 +120,7 @@ namespace STLang.RuntimeWrapper
             SetOutputValue(stringBldr, value, this.pouHandle);
         }
 
-        [DllImport("STLangRuntime.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        [DllImport(@"C:\Users\cyber\Source\Repos\StructuredTextRuntime\Debug\StructuredTextRuntime.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         static extern int GetInputNames(IntPtr[] Inputs, int POUHandle);
 
         public string[] InputNames
@@ -145,7 +142,7 @@ namespace STLang.RuntimeWrapper
             }
         }
 
-        [DllImport("STLangRuntime.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        [DllImport(@"C:\Users\cyber\Source\Repos\StructuredTextRuntime\Debug\StructuredTextRuntime.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         static extern int GetOutputNames(IntPtr[] Outputs, int POUHandle);
 
         public string[] OutputNames
@@ -167,7 +164,7 @@ namespace STLang.RuntimeWrapper
             }
         }
 
-        [DllImport("STLangRuntime.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(@"C:\Users\cyber\Source\Repos\StructuredTextRuntime\Debug\StructuredTextRuntime.dll", CallingConvention = CallingConvention.Cdecl)]
         static extern double ExecutePOU(double[] argV, int argC, int pouHandle);
 
         public double Execute(double[] inputs)

@@ -143,7 +143,7 @@ namespace STLang.Statements
             int parameter = elemSize | (this.VariableList.Count() << 4);
             this.Size.GenerateLoad();
             var0.Location.AbsoluteAddress.GenerateLoad();
-            this.StoreInstruction(VirtualMachineInstruction.COPY_STACK, parameter);
+            this.StoreInstruction(VirtualMachineInstruction.STK_COPY, parameter);
         }
 
         private readonly double constRatio;

@@ -32,7 +32,7 @@ namespace STLang.DataTypes
             get { return true; } 
         }
 
-        public override bool IsTextType
+        public override bool IsAnyStringType
         {
             get { return true; }
         }

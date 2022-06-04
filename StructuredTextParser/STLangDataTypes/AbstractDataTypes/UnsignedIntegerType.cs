@@ -32,7 +32,7 @@ namespace STLang.DataTypes
                 if (this.Size >= expression.DataType.Size)
                     return 1.0f;
                 else
-                    return 1.0f * (expression.DataType.Size / this.Size);
+                    return 1.0f * (expression.DataType.Size / (float)this.Size);
             }
             else if (!expression.DataType.IsUnsignedIntType)
                 return MAX_CONVERSION_COST;
@@ -41,7 +41,7 @@ namespace STLang.DataTypes
             else if (this.Size >= expression.DataType.Size)
                 return 0.333f;
             else
-                return 0.333f * (expression.DataType.Size / this.Size);
+                return 0.333f * (expression.DataType.Size / (float)this.Size);
         }
 
         public override bool IsIntegerType 

@@ -43,7 +43,7 @@ namespace STLang.Statements
                 {
                     if (varCount > 1)
                     {
-                        if (this.DataType.IsTextType)
+                        if (this.DataType.IsAnyStringType)
                             initialValue.GenerateLoad();
                         else if (this.DataType == TypeNode.LReal)
                             this.StoreInstruction(VirtualMachineInstruction.DDUPL);

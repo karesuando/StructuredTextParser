@@ -70,6 +70,7 @@ namespace STLang.DisAssemble
         {
             switch (instruction)
             {
+                case VirtualMachineInstruction.BLOD:
                 case VirtualMachineInstruction.ILOD:
                 case VirtualMachineInstruction.WLOD:
                 case VirtualMachineInstruction.LLOD:
@@ -85,6 +86,7 @@ namespace STLang.DisAssemble
                 case VirtualMachineInstruction.DSTO:
                 case VirtualMachineInstruction.SSTO:
                 case VirtualMachineInstruction.WSSTO:
+                case VirtualMachineInstruction.BLODX:
                 case VirtualMachineInstruction.ILODX:
                 case VirtualMachineInstruction.WLODX:
                 case VirtualMachineInstruction.LLODX:

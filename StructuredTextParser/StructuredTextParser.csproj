@@ -85,6 +85,8 @@
     <Compile Include="STLangDataTypes\ElementaryDataTypes\BitStringTypes\DWordType.cs" />
     <Compile Include="STLangDataTypes\ElementaryDataTypes\BitStringTypes\LWordType.cs" />
     <Compile Include="STLangDataTypes\ElementaryDataTypes\BitStringTypes\WordType.cs" />
+    <Compile Include="STLangDataTypes\ElementaryDataTypes\CharacterTypes\CharType.cs" />
+    <Compile Include="STLangDataTypes\ElementaryDataTypes\CharacterTypes\WCharType.cs" />
     <Compile Include="STLangDataTypes\ElementaryDataTypes\DateTimeDataTypes\DateTimeType.cs" />
     <Compile Include="STLangDataTypes\ElementaryDataTypes\DateTimeDataTypes\DateType.cs" />
     <Compile Include="STLangDataTypes\ElementaryDataTypes\DateTimeDataTypes\TimeOfDayType.cs" />
@@ -101,6 +103,7 @@
     <Compile Include="STLangDataTypes\ElementaryDataTypes\UnSignedIntDataTypes\ULInt.cs" />
     <Compile Include="STLangDataTypes\ElementaryDataTypes\UnSignedIntDataTypes\USInt.cs" />
     <Compile Include="STLangDataTypes\GenericDataTypes\AnyBitType.cs" />
+    <Compile Include="STLangDataTypes\GenericDataTypes\AnyCharacter.cs" />
     <Compile Include="STLangDataTypes\GenericDataTypes\AnyDateType.cs" />
     <Compile Include="STLangDataTypes\GenericDataTypes\AnyDerivedType.cs" />
     <Compile Include="STLangDataTypes\GenericDataTypes\AnyElementaryType.cs" />
@@ -187,6 +190,8 @@
     <Compile Include="STLangExpressions\Constants\BitStringConstants\DWordConstant.cs" />
     <Compile Include="STLangExpressions\Constants\BitStringConstants\LWordConstant.cs" />
     <Compile Include="STLangExpressions\Constants\BitStringConstants\WordConstant.cs" />
+    <Compile Include="STLangExpressions\Constants\CharConstants\CharConstant.cs" />
+    <Compile Include="STLangExpressions\Constants\CharConstants\WCharConstant.cs" />
     <Compile Include="STLangExpressions\Constants\DateTimeConstants\DateConstant.cs" />
     <Compile Include="STLangExpressions\Constants\DateTimeConstants\DateTimeConstant.cs" />
     <Compile Include="STLangExpressions\Constants\DateTimeConstants\TimeConstant.cs" />

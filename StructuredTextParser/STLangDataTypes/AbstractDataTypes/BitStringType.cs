@@ -33,7 +33,7 @@ namespace STLang.DataTypes
                 if (this.Size >= expression.DataType.Size)
                     return 1.0f;
                 else
-                    return 1.0f * (expression.DataType.Size / this.Size);
+                    return 1.0f * (expression.DataType.Size / (float)this.Size);
             }
             else if (!expression.DataType.IsBitStringType)
                 return MAX_CONVERSION_COST;

@@ -35,6 +35,8 @@ namespace STLang.DataTypes
             LReal = new LRealType();
             Bool = new BoolType();
             Byte = new ByteType();
+            Char = new CharType();
+            WChar = new WCharType();
             Word = new WordType();
             DWord = new DWordType();
             LWord = new LWordType();
@@ -100,7 +102,7 @@ namespace STLang.DataTypes
             get { return false; } 
         }
 
-        public virtual bool IsTextType
+        public virtual bool IsAnyStringType
         {
             get { return false; }
         }
@@ -108,6 +110,16 @@ namespace STLang.DataTypes
         public virtual bool IsStringType 
         { 
             get { return false; } 
+        }
+
+        public virtual bool IsCharType
+        {
+            get { return false; }
+        }
+
+        public virtual bool IsWCharType
+        {
+            get { return false; }
         }
 
         public virtual bool IsWStringType 
@@ -337,6 +349,10 @@ namespace STLang.DataTypes
 
         protected const int SINT_SIZE = sizeof(sbyte);
 
+        protected const int CHAR_SIZE = sizeof(byte);
+
+        protected const int WCHAR_SIZE = sizeof(char);
+
         protected const int DINT_SIZE = sizeof(int);
 
         protected const int LINT_SIZE = sizeof(long);
@@ -404,6 +420,10 @@ namespace STLang.DataTypes
         public static readonly BoolType Bool;
 
         public static readonly ByteType Byte;
+
+        public static readonly CharType Char;
+
+        public static readonly WCharType WChar;
 
         public static readonly WordType Word;
 

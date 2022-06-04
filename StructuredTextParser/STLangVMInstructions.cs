@@ -240,6 +240,7 @@ namespace STLang.VMInstructions
         RANGE_CHECK,  // Array index check
         MEM_COPY,     // MEMory to memory COPY
         ROM_COPY,     // Read Only Memory to memory COPY
+        STK_COPY,     // STacK to memory COPY
         MEM_SETB,     // MEMory SET to Bytes (+ parameter)
         MEM_SETZ,     // MEMory SET to Zero
         F2I,          // Float to Int

@@ -513,7 +513,7 @@ namespace STLang.Expressions
                         ArrayInstanceSymbol array = (ArrayInstanceSymbol)this.symbol;
                         InstanceSymbol elementSymbol = array.ElementSymbol;
                         TypeNode elemDataType = elementSymbol.DataType;
-                        if (elemDataType.IsElementaryType || elemDataType.IsTextType)
+                        if (elemDataType.IsElementaryType || elemDataType.IsAnyStringType)
                         {
                             if (this.location.AbsoluteAddress == null)
                             {
@@ -800,7 +800,7 @@ namespace STLang.Expressions
         private void GenerateStore(InstanceSymbol member)
         {
             TypeNode dataType = member.DataType;
-            if (dataType.IsElementaryType || dataType.IsTextType)
+            if (dataType.IsElementaryType || dataType.IsAnyStringType)
             {
                 int index = member.Location.Index;
                 if (dataType == TypeNode.LReal)

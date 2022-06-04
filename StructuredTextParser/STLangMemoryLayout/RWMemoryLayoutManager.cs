@@ -112,7 +112,7 @@ namespace STLang.MemoryLayout
                               STVarQualifier varQual, STDeclQualifier edgeQual, Expression initialValue,
                               int variablePos, int elementCount = 1)
         {
-            if (dataType.IsElementaryType || dataType.IsTextType)
+            if (dataType.IsElementaryType || dataType.IsAnyStringType)
             {
                 MemoryLocation index;
                 if (this.IsConstantVariable(varQual) && initialValue.IsConstant && variablePos >= 0)

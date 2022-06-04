@@ -248,7 +248,7 @@ namespace STLang.Symbols
                     timeOfDayList.Add((TimeSpan)input.Evaluate());
                 return inputs[timeOfDayList.MinIndex()];
             }
-            else if (dataType.IsTextType)
+            else if (dataType.IsAnyStringType)
             {
                 List<string> stringList = new List<string>();
                 foreach (Expression input in inputs)

@@ -74,8 +74,8 @@
 			   FUNCTION END_FUNCTION FUNCTION_BLOCK END_FUNCTION_BLOCK 
 			   TYPE END_TYPE INT SINT DINT LINT USINT UINT UDINT ULINT 
 			   REAL LREAL DATE TIME TIME_OF_DAY TOD DATE_AND_TIME DT 
-			   STRING WSTRING BOOL BYTE WORD DWORD LWORD DOTDOT ANY ANY_INT
-			   ANY_DERIVED ANY_ELEMENTARY ANY_MAGNITUDE ANY_STRING
+			   STRING WSTRING BOOL BYTE CHAR WCHAR WORD DWORD LWORD DOTDOT 
+			   ANY ANY_INT ANY_DERIVED ANY_ELEMENTARY ANY_MAGNITUDE ANY_STRING
 			   ANY_REAL ANY_BIT ANY_NUM ANY_DATE R_EDGE F_EDGE VAR 
 			   VAR_INPUT VAR_OUTPUT VAR_IN_OUT VAR_EXTERNAL AT VAR_GLOBAL 
 			   VAR_TEMP VAR_ACCESS VAR_CONFIG END_VAR CONSTANT RETAIN NON_RETAIN 
@@ -1169,7 +1169,7 @@ reserved_word   : elementary_type     {$$ = $1.Name;}
 		while (field != null)
 		{
 			fieldDataType = field.DataType;
-			if (fieldDataType.IsElementaryType || fieldDataType.IsTextType)
+			if (fieldDataType.IsElementaryType || fieldDataType.IsAnyStringType)
 			{
 				dataType = this.MakeInitializerDataType(elementCount, fieldDataType);
 				size = MakeIntConstant((long)dataType.Size);
@@ -1188,7 +1188,7 @@ reserved_word   : elementary_type     {$$ = $1.Name;}
 				TypeNode elementType = array2.BasicElementType;
 				uint elemCount2 = (array2.Size/elementType.Size)*elementCount;
 				dataType = this.MakeInitializerDataType(elemCount2, elementType);
-				if (elementType.IsElementaryType || elementType.IsTextType)
+				if (elementType.IsElementaryType || elementType.IsAnyStringType)
 				{
 					size = MakeIntConstant((long)dataType.Size);
 					arrayInit = new ArrayInitializer(dataType, size);
@@ -1258,7 +1258,7 @@ reserved_word   : elementary_type     {$$ = $1.Name;}
 			ArrayType array = (ArrayType)dataType;
 			TypeNode elementType = array.BasicElementType;
 		
-			if (elementType.IsElementaryType || elementType.IsTextType)
+			if (elementType.IsElementaryType || elementType.IsAnyStringType)
 			{
 				Expression size = MakeIntConstant((long)dataType.Size);
 				arrayInitList = new ArrayInitializer(dataType, size);
@@ -2296,7 +2296,7 @@ private SubRange MakeSubrange(Expression lower, Expression upper, LexLocation lo
 					this.report.SemanticError(113, loc);
 				if (TypeNode.LookUpType(typeID, out arrayDataType))
 					return arrayDataType;
-				else if (basicElementType.IsElementaryType || basicElementType.IsTextType)
+				else if (basicElementType.IsElementaryType || basicElementType.IsAnyStringType)
 				{
 					Expression size = MakeIntConstant(byteCount);
 					return new ArrayType(typeName, (int)lower, (int)upper, (uint)byteCount, size, elementType, basicElementType, initializer, typeID);
@@ -2335,7 +2335,7 @@ private SubRange MakeSubrange(Expression lower, Expression upper, LexLocation lo
 
 	private TypeNode MakeFlattenedArrayType(long elementCount, TypeNode elementType, Expression initializer)
 	{
-		if (elementType.IsElementaryType || elementType.IsTextType)
+		if (elementType.IsElementaryType || elementType.IsAnyStringType)
 		{
 			string typeID;
 			TypeNode arrayDataType;
@@ -7256,7 +7256,7 @@ private SubRange MakeSubrange(Expression lower, Expression upper, LexLocation lo
 			declSize = MakeIntConstant(byteCount);
 			return new ElementaryVarDeclStatement(variables, dataType, declQual, initialValue, declSize);
 		}
-		else if (dataType.IsTextType)
+		else if (dataType.IsAnyStringType)
 		{
             //
             // Store information about string buffer offset and size.
@@ -7341,7 +7341,7 @@ private SubRange MakeSubrange(Expression lower, Expression upper, LexLocation lo
 		    ArrayType array = (ArrayType)dataType;
             TypeNode elementType = array.BasicElementType;
 
-			if (elementType.IsElementaryType || elementType.IsTextType)
+			if (elementType.IsElementaryType || elementType.IsAnyStringType)
             {
 				if (initialValue is DefaultArrayInitializer)
 				{
@@ -7358,7 +7358,7 @@ private SubRange MakeSubrange(Expression lower, Expression upper, LexLocation lo
 						long elemCount = (dataType.Size / size)*variables.Count;
 						declSize = MakeIntConstant(elemCount);
 					}
-					if (elementType.IsTextType)
+					if (elementType.IsAnyStringType)
 					{
 						int stringType = elementType.IsStringType ? 0 : 1;
 						int bufferSize = (int)elementType.Size;
@@ -7382,7 +7382,7 @@ private SubRange MakeSubrange(Expression lower, Expression upper, LexLocation lo
 				{
 					STVarQualifier varQual = this.variableQualifier;
 					ArrayInitializer arrayInit = (ArrayInitializer)initialValue;
-					if (elementType.IsTextType)
+					if (elementType.IsAnyStringType)
 					{
 						int stringType = elementType.IsStringType ? 0 : 1;
 						int bufferSize = (int)elementType.Size;
@@ -7879,7 +7879,7 @@ private SubRange MakeSubrange(Expression lower, Expression upper, LexLocation lo
 			ArrayType array = (ArrayType)expression.DataType;
 			TypeNode elementType = array.BasicElementType;
 
-			if (elementType.IsElementaryType || elementType.IsTextType)
+			if (elementType.IsElementaryType || elementType.IsAnyStringType)
 			{
                 Expression absoluteAddress;
 				Expression size = MakeIntConstant(array.Size);
@@ -8028,7 +8028,7 @@ private SubRange MakeSubrange(Expression lower, Expression upper, LexLocation lo
 			this.isIndexExpr = false;
 			if (variablePart == null)
 				throw new STLangCompilerError("MakeIndexedVariable() failed: Offset is null.");
-			else if (dataType.IsElementaryType || dataType.IsTextType)
+			else if (dataType.IsElementaryType || dataType.IsAnyStringType)
 			{
 				if (variablePart.IsConstant)
 				{
@@ -8742,7 +8742,7 @@ private SubRange MakeSubrange(Expression lower, Expression upper, LexLocation lo
 				}
 			}
 		}
-		else if (dataType.IsElementaryType || dataType.IsTextType)
+		else if (dataType.IsElementaryType || dataType.IsAnyStringType)
 		{
 	        // Obs! Om man allokerar mer minne för att spara undan värdet av ett 
 		    // deluttryck efter ett anrop av SetAbsoluteAddress() kan absolutad- 
