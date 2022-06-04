@@ -325,14 +325,6 @@ namespace STLang.ByteCodegenerator
             return dlc;
         }
 
-        //protected enum POUType : uint
-        //{
-        //    FUNCTION = 0x2fc9a35d,
-        //    FUNCTION_BLOCK = 0x5f3ec8a2,
-        //    CLASS = 0xf1e7ba94,
-        //    PROGRAM = 0x61ac50b3
-        //}
-
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
         private struct ExternalPOUSymbol
         {

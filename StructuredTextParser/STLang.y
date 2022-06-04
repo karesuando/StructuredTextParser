@@ -5,7 +5,6 @@
 %using STLang.Scanner;
 %using STLang.Subranges;
 %using STLang.DataTypes;
-%using STLang.Properties;
 %using STLang.Statements;
 %using STLang.Extensions;
 %using STLang.Expressions;
@@ -20,6 +19,7 @@
 %using STLang.ByteCodegenerator;
 %using STLang.ConstantPoolHandler;
 %using STLang.ImplDependentParams;
+%using StructuredTextParser.Properties;
 %using STLang.RuntimeWrapper;
 %parsertype STLangParser
 %output = STLangParser.cs
@@ -195,6 +195,8 @@ elementary_type : SINT           {$$ = TypeNode.SInt;}
 				| WORD           {$$ = TypeNode.Word;}
 				| DWORD          {$$ = TypeNode.DWord;}
 				| LWORD          {$$ = TypeNode.LWord;}
+				| WCHAR          {$$ = TypeNode.WChar;}
+				| CHAR           {$$ = TypeNode.Char;}
 				;
 
 generic_type    : ANY            {$$ = TypeNode.Any;}
@@ -7162,16 +7164,16 @@ private SubRange MakeSubrange(Expression lower, Expression upper, LexLocation lo
 			this.report.SemanticError(179, dataType.Name, location);
 	}
 
-	private ProgramOrganizationUnitType ProgOrgType
+	private POUType ProgOrgType
 	{
 		get 
 		{
 			if (this.isFunctionDecl)
-				return ProgramOrganizationUnitType.FUNCTION;
+				return POUType.FUNCTION;
 			else if (this.isFunctionBlockDecl)
-				return ProgramOrganizationUnitType.FUNCTION_BLOCK;
+				return POUType.FUNCTION_BLOCK;
 			else
-				return ProgramOrganizationUnitType.PROGRAM;
+				return POUType.PROGRAM;
 		}
 	}
 

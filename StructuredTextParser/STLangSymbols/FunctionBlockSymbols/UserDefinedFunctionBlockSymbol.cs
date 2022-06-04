@@ -25,6 +25,7 @@ namespace STLang.Symbols
 
             this.functionBlockDef = new ProgramOrganizationUnit();
             this.functionBlockDef.Name = name;
+            this.functionBlockDef.POUType = POUType.FUNCTION_BLOCK;
             this.functionBlockDef.VarDeclarations = members;
             this.functionBlockDef.InputDataTypes = inputTypes.ToArray();
             this.functionBlockDef.TypeID = "{" + this.Name + "}";

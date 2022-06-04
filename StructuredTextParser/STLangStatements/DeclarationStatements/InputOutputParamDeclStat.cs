@@ -11,7 +11,7 @@ namespace STLang.Statements
     public class IOParameterDeclaration : DeclarationStatement
     {
         public IOParameterDeclaration(STVarType formalParType, STVarQualifier formalParQual, 
-                                      List<VarDeclStatement> formalParDecls, ProgramOrganizationUnitType pouType)
+                                      List<VarDeclStatement> formalParDecls, POUType pouType)
             : base(formalParDecls, formalParType, formalParQual, pouType)
         {
            
@@ -54,18 +54,18 @@ namespace STLang.Statements
                         varInitDecl.GenerateCode();
                         //switch (this.ProgramOrganizationUnitType)
                         //{
-                        //    case ProgramOrganizationUnitType.FUNCTION:
+                        //    case POUType.FUNCTION:
                         //        varInitDecl.GenerateCode();
                         //        break;
 
-                        //    case ProgramOrganizationUnitType.FUNCTION_BLOCK:
+                        //    case POUType.FUNCTION_BLOCK:
                         //        foreach (InstanceSymbol outputSymbol in varInitDecl.SymbolList)
                         //        {
-                                    
+
                         //        }
                         //        break;
 
-                        //    case ProgramOrganizationUnitType.PROGRAM:
+                        //    case POUType.PROGRAM:
                         //        break;
 
                         //}

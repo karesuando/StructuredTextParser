@@ -11,20 +11,20 @@ namespace STLang.Statements
 {
     public abstract class DeclarationStatement : Statement
     {
-        public DeclarationStatement(VarDeclStatement varDeclStat, STVarType varType, STVarQualifier varQual, ProgramOrganizationUnitType pouType)
+        public DeclarationStatement(VarDeclStatement varDeclStat, STVarType varType, STVarQualifier varQual, POUType pouType)
         {
             this.variableType = varType;
             this.variableQualifier = varQual;
             this.varInitDeclList = new List<VarDeclStatement>{varDeclStat};
-            this.progOrgTypeType = pouType;
+            this.pouType = pouType;
         }
 
-        public DeclarationStatement(List<VarDeclStatement> varDeclStatList, STVarType varType, STVarQualifier varQual, ProgramOrganizationUnitType pouType)
+        public DeclarationStatement(List<VarDeclStatement> varDeclStatList, STVarType varType, STVarQualifier varQual, POUType pouType)
         {
             this.variableType = varType;
             this.variableQualifier = varQual;
             this.varInitDeclList = varDeclStatList;
-            this.progOrgTypeType = pouType;
+            this.pouType = pouType;
         }
 
         public IEnumerable<VarDeclStatement> VarInitDeclList
@@ -42,9 +42,9 @@ namespace STLang.Statements
             get { return this.variableQualifier; }
         }
 
-        public ProgramOrganizationUnitType ProgramOrganizationUnitType
+        public POUType ProgramOrganizationUnitType
         {
-            get { return this.progOrgTypeType; }
+            get { return this.pouType; }
         }
 
         public bool IsConstantDeclaration
@@ -125,13 +125,6 @@ namespace STLang.Statements
 
         private readonly List<VarDeclStatement> varInitDeclList;
 
-        private readonly ProgramOrganizationUnitType progOrgTypeType;
-    }
-
-    public enum ProgramOrganizationUnitType
-    {
-        FUNCTION,
-        FUNCTION_BLOCK,
-        PROGRAM
+        private readonly POUType pouType;
     }
 }

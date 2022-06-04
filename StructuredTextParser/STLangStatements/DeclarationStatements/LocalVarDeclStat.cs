@@ -14,7 +14,7 @@ namespace STLang.Statements
 {
     public class LocalVarDeclaration : DeclarationStatement
     {
-        public LocalVarDeclaration(List<VarDeclStatement> locals, STVarType varType, STVarQualifier varQual, ProgramOrganizationUnitType pouType)
+        public LocalVarDeclaration(List<VarDeclStatement> locals, STVarType varType, STVarQualifier varQual, POUType pouType)
             : base(locals, varType, varQual, pouType)
         {
             this.varQualifier = varQual;

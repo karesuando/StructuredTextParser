@@ -5,7 +5,7 @@ using STLang.DataTypes;
 using STLang.Statements;
 using STLang.MemoryLayout;
 using STLang.Expressions;
-
+using STLang.Symbols;
 
 namespace STLang.POUDefinitions
 {
@@ -14,6 +14,8 @@ namespace STLang.POUDefinitions
         public string Name { get; set; }
 
         public TypeNode ReturnType { get; set; }
+
+        public POUType POUType { get; set; }
 
         public int InputCount { get; set; }
 

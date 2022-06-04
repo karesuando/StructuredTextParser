@@ -145,6 +145,7 @@ namespace STLang.Symbols
                 ProgramOrganizationUnit functionDef = new ProgramOrganizationUnit()
                 {
                     Name = this.Name + functionID,
+                    POUType = POUType.FUNCTION,
                     ReturnType = returnType,
                     VarDeclarations = varDecls,
                     InputDataTypes = this.MakeDataTypeList(formals),
