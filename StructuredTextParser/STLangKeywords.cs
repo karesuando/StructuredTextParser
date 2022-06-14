@@ -62,6 +62,8 @@ namespace STLang.KeyWords
             this.Add("WSTRING", Tokens.WSTRING);
             this.Add("BOOL", Tokens.BOOL);
             this.Add("BYTE", Tokens.BYTE);
+            this.Add("CHAR", Tokens.CHAR);
+            this.Add("WCHAR", Tokens.WCHAR);
             this.Add("WORD", Tokens.WORD);
             this.Add("DWORD", Tokens.DWORD);
             this.Add("LWORD", Tokens.LWORD);
@@ -89,6 +91,7 @@ namespace STLang.KeyWords
             this.Add("END_VAR", Tokens.END_VAR);
             this.Add("AT", Tokens.AT);
             this.Add("CONSTANT", Tokens.CONSTANT);
+            this.Add("OVERLAP", Tokens.OVERLAP);
             this.Add("RETAIN", Tokens.RETAIN);
             this.Add("TRUE", Tokens.TRUE);
             this.Add("FALSE", Tokens.FALSE);

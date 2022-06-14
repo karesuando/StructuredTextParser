@@ -67,11 +67,14 @@
 	public StructMemberDeclaration MemberDecl;
 	public ProgramOrganizationUnitCall POU;
 	public IndexedVariable IndexedVariable;
+	public NamedValueList NamedValueList;
+	public NamedValue NamedValue;
+	public bool Boolean;
 }
 %token <Ident> WHILE REPEAT UNTIL FOR IF TO DO THEN ELSE CASE END_CASE
 			   ELSIF END_FOR END_WHILE END_IF END_REPEAT EXIT BY
 			   ASSIGN OUTPUT_ASSIGN PROGRAM END_PROGRAM ARRAY OF STRUCT END_STRUCT 
-			   FUNCTION END_FUNCTION FUNCTION_BLOCK END_FUNCTION_BLOCK 
+			   OVERLAP FUNCTION END_FUNCTION FUNCTION_BLOCK END_FUNCTION_BLOCK 
 			   TYPE END_TYPE INT SINT DINT LINT USINT UINT UDINT ULINT 
 			   REAL LREAL DATE TIME TIME_OF_DAY TOD DATE_AND_TIME DT 
 			   STRING WSTRING BOOL BYTE CHAR WCHAR WORD DWORD LWORD DOTDOT 
@@ -112,7 +115,7 @@
 %type <MemberDecl> struct_member_decl
 %type <Object> case_element function_decl
 %type <DataType> elementary_type array_type structure_type subrange_type enumerated_type
-	  derived_type non_generic_type string_type data_type generic_type
+	  derived_type non_generic_type string_type data_type generic_type namedvalue_type
 %type <Expression> expression constant condition_DO condition_THEN expression_OF 
 	  variable simple_variable symbolic_variable initial_value until_condition 
 	  control_variable optional_by_stat initializer
@@ -127,8 +130,11 @@
 %type <TypeSpec> data_type_spec
 %type <VarQualifier> opt_var_qualifier 
 %type <EdgeQualifier> opt_decl_qualifier
-%type <Ident> enum_identifier reserved_word
+%type <Ident> enum_identifier
 %type <Token> assign
+%type <Boolean> opt_overlap_spec
+%type <NamedValue> named_value
+%type <NamedValueList> namedvalue_list
 
 %nonassoc DOTDOT ASSIGN OUTPUT_ASSIGN
 %left IOR
@@ -165,7 +171,6 @@ subrange        : expression DOTDOT expression {$$ = this.MakeSubrange($1, $3, @
 
 identifier_list : IDENT                                 {$$ = this.MakeIdentifierList($1, @1);}
 				| identifier_list ',' IDENT             {$$ = this.AddIdentToList($1, $3, @3);} 
-				| identifier_list ',' reserved_word     {$$ = $1; this.report.SyntaxError(192, $3.ToString(), @3);} 
 				| identifier_list IDENT 	            {$$ = this.AddIdentToList($1, $2, @2);this.report.SyntaxError(75, @2);}
 				;
 
@@ -220,12 +225,13 @@ non_generic_type: elementary_type
 				;
 
 data_type       : elementary_type 
-				| array_type      
+                | namedvalue_type
+				| enumerated_type
 				| structure_type  
-				| enumerated_type   
 				| subrange_type   
 				| derived_type
-				| string_type    
+				| string_type
+				| array_type      
 				| generic_type   {$$ = TypeNode.Error; this.report.SemanticError(51, @1);} 
 				;
 
@@ -238,7 +244,7 @@ array_type      : ARRAY '[' subrange_list ']' OF non_generic_type  {$$ = this.Ma
 				;
 
 struct_member_decls
-                : STRUCT {this.CheckNestingDepth(@1);} struct_member_decl {$$ = this.MakeStructMemberList($3);}
+                : STRUCT {this.CheckNestingDepth(@1);} opt_overlap_spec struct_member_decl {$$ = this.MakeStructMemberList($4);}
                 | struct_member_decls struct_member_decl                  {$$ = this.AddStructMemberDecl($1, $2, @2);}
 				;
 
@@ -247,15 +253,15 @@ struct_member_decl
 				;
 
 structure_type  : struct_member_decls END_STRUCT {$$ = this.MakeStructDataType($1);}
-				| STRUCT {this.CheckNestingDepth(@1);} 
-				     error 
-				  END_STRUCT {$$ = TypeNode.Error; this.yyerrok();}
 				| struct_member_decls error END_STRUCT {$$ = this.MakeStructDataType($1); this.yyerrok();}            
+				;
+
+opt_overlap_spec: OVERLAP {$$ = true;}
+                |         {$$ = false;}
 				;
 
 enum_identifier : IDENT                              {$$ = $1;}
                 | TYPED_ENUM                         {$$ = $1.Value; this.report.SyntaxError(169, $1.ToString(), @1);}
-				| reserved_word                      {$$ = ""; this.report.SyntaxError(192, $1.ToString(), @1);}
 				;
 
 enum_ident_seq  : '(' enum_identifier                {$$ = this.MakeEnumIdentList($2, @2);}      
@@ -269,7 +275,7 @@ enumerated_type : enum_ident_seq ')'                 {$$ = this.MakeEnumeratedTy
 				| '(' ')'                            {$$ = TypeNode.Error; this.report.SyntaxError(166, @1);}          
 				;
 				
-string_type     :  STRING '[' expression ']'         {$$ = this.MakeStringType($3, @1);}        
+string_type     : STRING '[' expression ']'          {$$ = this.MakeStringType($3, @1);}        
 				| WSTRING '[' expression ']'         {$$ = this.MakeWStringType($3, @1);}     
 				| STRING                             {$$ = TypeNode.String;}      
 				| WSTRING                            {$$ = TypeNode.WString;}                         
@@ -277,6 +283,17 @@ string_type     :  STRING '[' expression ']'         {$$ = this.MakeStringType($
 
 subrange_type   : non_generic_type '(' {this.SubrangeTypeStart($1);} subrange ')'       {$$ = this.MakeSubrangeType($1, $4, @4);}
 				;
+
+namedvalue_type : namedvalue_list ')'
+                | namedvalue_list error ')'           {yyerrok();}
+                ;
+
+namedvalue_list : elementary_type '(' named_value     {$$ = this.MakeNamedValueList($1, $3);}
+                | namedvalue_list ',' named_value     {$$ = this.AddNamedValue($1, $3);}
+                ;
+
+named_value     :  IDENT ASSIGN expression         {$$ = this.MakeNamedValue($1, $3, @1, @3);}
+                ;
 
 array_init_seq  : '[' {this.PushArrayElemType(@1);} initializer {$$ = this.MakeArrayInitializer($3, @3);    }
 				|  array_init_seq ',' initializer               {$$ = this.AddArrayInitializer($1, $3, @3); }          
@@ -309,7 +326,7 @@ initializer_seq : initializer                           {$$ = this.MakeInitializ
 				| initializer_seq error initializer     {$$ = this.AddInitializerToSequence($1, $3, @3);this.yyerrok();}
 				;
 
-initial_value   : expression                              {$$ = this.CheckInitialValue($1, @1);}
+initial_value   : expression                              {$$ = this.TypeCheckInitialValue($1, @1);}
 				| array_init_list                         {$$ = $1;}
 				| struct_init_list                        {$$ = $1;}
 				;
@@ -672,73 +689,6 @@ opt_decl_qualifier
 				|                 {$$ = STDeclQualifier.NONE;}
 				;
 
-reserved_word   : elementary_type     {$$ = $1.Name;}
-				| STRING              {$$ = $1;}
-				| WSTRING             {$$ = $1;}
-				| RETAIN              {$$ = $1;}
-				| NON_RETAIN          {$$ = $1;}
-				| CONSTANT            {$$ = $1;}
-	            | R_EDGE              {$$ = $1;}
-				| F_EDGE              {$$ = $1;}
-				| READ_ONLY           {$$ = $1;}
-				| WRITE_ONLY          {$$ = $1;}
-				| VAR_INPUT           {$$ = $1;}
-				| VAR_OUTPUT          {$$ = $1;}
-				| VAR_IN_OUT          {$$ = $1;}
-				| VAR_GLOBAL          {$$ = $1;}
-				| VAR_ACCESS          {$$ = $1;}
-				| VAR_CONFIG          {$$ = $1;}
-				| VAR_TEMP            {$$ = $1;}
-				| VAR_EXTERNAL        {$$ = $1;}
-				| VAR                 {$$ = $1;}
-				| END_VAR             {$$ = $1;}
-				| AT                  {$$ = $1;}
-				| FUNCTION            {$$ = $1;}
-				| END_FUNCTION        {$$ = $1;}
-				| FUNCTION_BLOCK      {$$ = $1;}
-				| END_FUNCTION_BLOCK  {$$ = $1;}
-				| PROGRAM             {$$ = $1;}
-				| END_PROGRAM         {$$ = $1;}
-				| IF                  {$$ = $1;}
-				| THEN                {$$ = $1;}
-				| ELSE                {$$ = $1;}
-				| ELSIF               {$$ = $1;}
-				| END_IF              {$$ = $1;}
-				| WHILE               {$$ = $1;}
-				| END_WHILE           {$$ = $1;}
-				| REPEAT              {$$ = $1;}
-				| UNTIL               {$$ = $1;}
-				| END_REPEAT          {$$ = $1;}
-				| FOR                 {$$ = $1;}
-				| TO                  {$$ = $1;} 
-				| BY                  {$$ = $1;}
-				| DO                  {$$ = $1;}
-				| END_FOR             {$$ = $1;}
-				| CASE                {$$ = $1;}
-				| OF                  {$$ = $1;}
-				| END_CASE            {$$ = $1;}
-				| EXIT                {$$ = $1;}
-				| RETURN              {$$ = $1;}
-				| TYPE                {$$ = $1;}
-				| END_TYPE            {$$ = $1;}
-				| ARRAY               {$$ = $1;}
-				| STRUCT              {$$ = $1;}
-				| END_STRUCT          {$$ = $1;}
-				| AND                 {$$ = "AND";}
-				| NOT                 {$$ = "NOT";}
-				| IOR                 {$$ = "OR";}
-				| XOR                 {$$ = "XOR";}
-				| MOD                 {$$ = "MOD";}
-				| CONFIGURATION       {$$ = $1;}
-				| END_CONFIGURATION   {$$ = $1;}
-				| TRANSITION          {$$ = $1;}
-				| END_TRANSITION      {$$ = $1;}
-				| RESOURCE            {$$ = $1;}
-				| END_RESOURCE        {$$ = $1;}
-				| WITH                {$$ = $1;}
-				| TASK                {$$ = $1;}
-				;
-
 %%
 	public STLangParser(STLangScanner scanner, ErrorHandler errorHandler) : base(scanner) 
 	{ 
@@ -896,6 +846,41 @@ reserved_word   : elementary_type     {$$ = $1.Name;}
 		if (this.symbolTable.IsValidUserDefinedSymbol(ident, location))
 			identList.Add(ident);
 		return identList;
+	}
+
+	private NamedValueList MakeNamedValueList(TypeNode dataType, NamedValue namedValue)
+	{
+		Expression expression;
+		if (namedValue == null) 
+			expression = Expression.Error;
+		else {
+			expression = namedValue.Value;
+
+			if (expression != null)
+			{
+			    if (! expression.IsConstant)
+					this.report.SemanticError(193, namedValue.Name, namedValue.IdLoc);
+				if (value.DataType != dataType)
+				{
+				}
+			}
+		}
+		return new NamedValueList(namedValue, dataType);
+	}
+
+	private NamedValueList AddNamedValue(NamedValueList namedValueDecl, NamedValue namedValue)
+	{
+		if (namedValueDecl == null)
+			return new NamedValueList(namedValue, TypeNode.Error);
+		else {
+			namedValueDecl.Add(namedValue);
+			return namedValueDecl;
+		}
+	}
+
+	private NamedValue MakeNamedValue(string name, Expression value, LexLocation idLoc, LexLocation valueLoc)
+	{
+		return new NamedValue(name, value, idLoc, valueLoc);
 	}
 
 	private List<string> AddIdentToList(List<string> identList, string ident, LexLocation location)
@@ -2784,7 +2769,7 @@ private SubRange MakeSubrange(Expression lower, Expression upper, LexLocation lo
 		SubRange selectorSubrange = selectorDataType.GetSubrange();
 		if (selectorSubrange.Contains(subRange))
 			return new SubrangeLabel(subRange);
-		else if (selectorSubrange.AreDisjoint(subRange))
+		else if (selectorSubrange.IsDisjoint(subRange))
 		{
 			this.report.SemanticError(-3, subRange.ToString(), selectorDataType.Name, loc);
 			return new SubrangeLabel(subRange);
@@ -2986,6 +2971,16 @@ private SubRange MakeSubrange(Expression lower, Expression upper, LexLocation lo
 		}
 	}
 
+	private TypeNode GetBaseType(TypeNode baseType)
+	{
+		if (baseType is DerivedType)
+			return GetBaseType(((DerivedType)baseType).BaseType);
+		else if (baseType is EnumeratedType)
+			return ((EnumeratedType)baseType).BaseType;
+		else
+			return baseType;
+	}
+
 	private SubrangeLabel CheckCaseLabel(SubRange subRange, LexLocation location)
 	{
 		if (subRange == null)
@@ -3007,7 +3002,7 @@ private SubRange MakeSubrange(Expression lower, Expression upper, LexLocation lo
 			else if (selectorDataType == labelDataType)
 			{
                 SubRange selectorSubRange = selectorDataType.GetSubrange();
-                if (selectorSubRange.AreDisjoint(subRange))
+                if (selectorSubRange.IsDisjoint(subRange))
                 {
 					string subRangeStr = subRange.ToString();
                     string selDataTypeName = selectorDataType.Name;
@@ -3113,17 +3108,27 @@ private SubRange MakeSubrange(Expression lower, Expression upper, LexLocation lo
 			}
 			else if (selectorDataType.IsEnumeratedType && labelDataType.IsEnumeratedType)
 			{
-				SubRange selectorSubrange = selectorDataType.GetSubrange();
-				if (selectorSubrange.Contains(subRange))
-					return new SubrangeLabel(subRange);
-				else if (selectorSubrange.AreDisjoint(subRange))
+				EnumeratedType enumSelectorType = (EnumeratedType)this.GetBaseType(selectorDataType);
+				EnumeratedType enumLabelType = (EnumeratedType)this.GetBaseType(labelDataType);
+
+				if (enumSelectorType.BaseType != enumLabelType.BaseType)
 				{
-					this.report.SemanticError(-3, subRange.ToString(), selectorDataType.Name, location);
-					return new SubrangeLabel(subRange);
+					this.report.SemanticError(86, subRange.ToString(), selectorDataType.Name, labelDataType.Name, location);
+					return null;
 				}
 				else {
-					this.report.Warning(14, subRange.ToString(), location);
-					return new SubrangeLabel(subRange);
+					SubRange selectorSubrange = selectorDataType.GetSubrange();
+					if (selectorSubrange.Contains(subRange))
+						return new SubrangeLabel(subRange);
+					else if (selectorSubrange.IsDisjoint(subRange))
+					{
+						this.report.SemanticError(-3, subRange.ToString(), selectorDataType.Name, location);
+						return new SubrangeLabel(subRange);
+					}
+					else {
+						this.report.Warning(14, subRange.ToString(), location);
+						return new SubrangeLabel(subRange);
+					}
 				}
 			}
 			else {
@@ -7714,7 +7719,7 @@ private SubRange MakeSubrange(Expression lower, Expression upper, LexLocation lo
 		}
 	}
 
-	private Expression CheckInitialValue(Expression initialValue, LexLocation location)
+	private Expression TypeCheckInitialValue(Expression initialValue, LexLocation location)
 	{	
 		TypeNode declDataType = this.attributeStack.Top;
 
@@ -7764,7 +7769,7 @@ private SubRange MakeSubrange(Expression lower, Expression upper, LexLocation lo
 					{
 						SubRange initSubrange = initValDataType.GetSubrange();
 						SubRange declSubrange = declDataType.GetSubrange();
-						if (declSubrange.AreDisjoint(initSubrange))
+						if (declSubrange.IsDisjoint(initSubrange))
 							this.report.SemanticError(11, declDataType.Name, initValDataType.Name, location);
 					}
 				}
@@ -7833,6 +7838,11 @@ private SubRange MakeSubrange(Expression lower, Expression upper, LexLocation lo
 					this.report.SemanticError(64, initValDataType.Name, declDataType.Name, location);
 			}
 			else if (declDataType.IsStringType && initValDataType.IsStringType)
+			{
+				if (declDataType.Size < initValDataType.Size)
+					this.report.SemanticError(35, initialValue.ToString(), location);
+			}
+			else if (declDataType.IsWStringType && initValDataType.IsWStringType)
 			{
 				if (declDataType.Size < initValDataType.Size)
 					this.report.SemanticError(35, initialValue.ToString(), location);
@@ -8306,7 +8316,7 @@ private SubRange MakeSubrange(Expression lower, Expression upper, LexLocation lo
 			NumericLabel numericLabel = (NumericLabel)caseLabel;
 			foreach (CaseLabel thisCaseLabel in this.caseLabelList)
 			{
-				if (! thisCaseLabel.AreDisjoint(numericLabel))
+				if (! thisCaseLabel.IsDisjoint(numericLabel))
 				{
 					int errorCode = thisCaseLabel is NumericLabel ? 33 : 53;
 					this.report.SemanticError(errorCode, numericLabel.ToString(), thisCaseLabel.ToString(), loc);
@@ -8322,7 +8332,7 @@ private SubRange MakeSubrange(Expression lower, Expression upper, LexLocation lo
 			SubrangeLabel subRangeLabel = (SubrangeLabel)caseLabel;
 			foreach (CaseLabel thisCaseLabel in this.caseLabelList)
 			{
-				if (! thisCaseLabel.AreDisjoint(subRangeLabel))
+				if (! thisCaseLabel.IsDisjoint(subRangeLabel))
 				{
 					int errorCode = thisCaseLabel is NumericLabel ? 53 : 52;
 					this.report.SemanticError(errorCode, thisCaseLabel.ToString(), subRangeLabel.ToString(), loc);
@@ -8946,7 +8956,7 @@ private SubRange MakeSubrange(Expression lower, Expression upper, LexLocation lo
 					{
 						SubRange rValueSubrange = rValueDataType.GetSubrange();
 						SubRange lValueSubrange = lValueDataType.GetSubrange();
-						if (lValueSubrange.AreDisjoint(rValueSubrange))
+						if (lValueSubrange.IsDisjoint(rValueSubrange))
 						{
 							string lValName = lValueDataType.Name;
 							string rValName = rValueDataType.Name;
@@ -9106,6 +9116,7 @@ private SubRange MakeSubrange(Expression lower, Expression upper, LexLocation lo
 		case Tokens.ELSE:
 		case Tokens.WHILE:
 		case Tokens.FOR:
+		case Tokens.RETURN:
 		case Tokens.REPEAT:
 		case Tokens.CASE:
 		case Tokens.EXIT:

@@ -128,7 +128,7 @@ namespace STLang.Subranges
 
         public abstract bool Contains(SubRange subRange);
 
-        public abstract bool AreDisjoint(SubRange subRange);
+        public abstract bool IsDisjoint(SubRange subRange);
 
         private readonly Expression lowerBound;
 

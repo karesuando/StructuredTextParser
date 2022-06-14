@@ -294,7 +294,7 @@ namespace STLang.ErrorManager
             errorMessage.Add(83, "OF saknas i CASE-satsen");
             errorMessage.Add(84, "Strukturmedlemen {0} redan initierad.");
             errorMessage.Add(85, "Fann initierings lista för ett fält istället för förväntat värde av typen {0}.");
-            errorMessage.Add(86, "Datatypen på konstanten {0} i värdelistan och CASE-uttryckets datatyp är oförenliga ({1}, {2}).");
+            errorMessage.Add(86, "Datatypen på konstanten/intervallet {0} i värdelistan och CASE-uttryckets datatyp är oförenliga ({1}, {2}).");
             errorMessage.Add(87, "'TO' saknas i FOR-satsen.");
             errorMessage.Add(88, "Endast en else-sats får finnas i en case-sats.");
             errorMessage.Add(89, "Upprepningsfaktorn i initieringslistan får ej vara noll.");
@@ -402,6 +402,7 @@ namespace STLang.ErrorManager
             errorMessage.Add(190, "Uppräknad konstant {0} förväntades i deltintervall av uppräknad typ {1}.");
             errorMessage.Add(191, "Uppräknad konstant {0} i delintervallet av annan typ än uppräknad grundtyp {1}.");
             errorMessage.Add(192, "Nyckelord {0} funnet där identifierare förväntades.");
+            errorMessage.Add(193, "Uttrycket för namngivna värdet {0} måste vara konstant.");
         }
 
         private static readonly string[] warningMessage = 

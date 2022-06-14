@@ -45,7 +45,7 @@ namespace STLang.Subranges
             return false;
         }
 
-        public override bool AreDisjoint(SubRange subRange)
+        public override bool IsDisjoint(SubRange subRange)
         {
             if (subRange is UIntSubrange)
             {

@@ -37,7 +37,7 @@ namespace STLang.Subranges
             }
         }
 
-        public override bool AreDisjoint(SubRange subRange)
+        public override bool IsDisjoint(SubRange subRange)
         {
             if (!(subRange is EnumSubrange))
                 return false;

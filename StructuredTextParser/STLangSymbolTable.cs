@@ -411,6 +411,19 @@ namespace STLang.SymbolTable
             symbolDictionary[this.scopeLevel][key] = typeNameSymbol;
         }
 
+        public void InstallNamedValue(string name, Expression value, TypeNode dataType)
+        {
+            string key = dataType.Name + "#" + name;
+
+            key = key.ToUpper();
+            if (symbolDictionary[SYSTEM_LEVEL].ContainsKey(name)) {
+
+            }
+            else {
+
+            }
+        }
+
         public void InstallEnumeratedConstants(EnumeratedType enumType)
         {
             string key;
@@ -530,6 +543,19 @@ namespace STLang.SymbolTable
             }
             string qualifiedName;
             foreach (string typeName in EnumeratedType.TypeNames)
+            {
+                qualifiedName = typeName.ToUpper() + "#" + ident;
+                for (int i = this.scopeLevel; i >= SYSTEM_LEVEL; i--)
+                {
+                    if (symbolDictionary[i].ContainsKey(qualifiedName))
+                    {
+                        symbol = symbolDictionary[i][qualifiedName];
+                        scopeLev = i;
+                        return true;
+                    }
+                }
+            }
+            foreach (string typeName in NamedValueType.TypeNames)
             {
                 qualifiedName = typeName.ToUpper() + "#" + ident;
                 for (int i = this.scopeLevel; i >= SYSTEM_LEVEL; i--)

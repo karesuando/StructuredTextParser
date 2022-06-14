@@ -1,3 +1,14 @@
+
+// ==========================================================================
+//  GPLEX error listing for lex source file <stlang.l>
+// ==========================================================================
+//  Version:  1.2.2
+//  Machine:  DESKTOP-N9PK5LB
+//  DateTime: 2022-06-13 23:49:49
+//  UserName: cyber
+// ==========================================================================
+
+
 %namespace STLang.Scanner
 %visibility public
 %scannertype STLangScanner
@@ -10,7 +21,7 @@
 %using STLang.ImplDependentParams;
 
 
-ALPHA           [a-zåäöA-ZÅÄÖ]
+ALPHA           [a-zÃ¥Ã¤Ã¶A-ZÃÃÃ]
 ALPHANUM        {ALPHA}|[0-9]
 IDENT           ({ALPHA}|_{ALPHANUM})(_?{ALPHANUM})*
 INT             [0-9](_?[0-9])*
@@ -49,7 +60,7 @@ TYPED_HEXINT    {IDENT}#{HEXINT}
 TYPED_ENUM      {IDENT}#{IDENT}
 WHITESPACE      [ \t\n\r]+
 
-%x ASCII_STRING,UNICODE_STRING,MULTI_LINE_COMMENT,PRAGMA,SINGLE_LINE_COMMENT
+%x ASCIISTR,UNICODESTR,MULTI_LINE_COMMENT,PRAGMA,SINGLE_LINE_COMMENT
 %%
 %{
 	// Scanner prolog
@@ -113,24 +124,32 @@ WHITESPACE      [ \t\n\r]+
 "=>"           {return (int)Tokens.OUTPUT_ASSIGN;                                                  }
 ".."           {return (int)Tokens.DOTDOT;                                                         }
 \{             {BEGIN(PRAGMA);                                                                     }
-"/*"           {BEGIN(MULTI_LINE_COMMENT);  this.flag = false;  nestingDepth = 1;                  }
-'              {BEGIN(ASCII_STRING);  this.String = ""; this.flag = false;                         } 
-\"             {BEGIN(UNICODE_STRING); this.String = "";this.flag = false;                         }
+"/*"           {BEGIN(MULTI_LINE_COMMENT);  this.flag = false;  commentNestingDepth = 1;           }
+'              {BEGIN(ASCIISTR);  this.String = ""; this.flag = false;                             } // AscII string
+\"             {BEGIN(UNICODESTR); this.String = "";this.flag = false;                             } // Unicode string
 "//"           {BEGIN(SINGLE_LINE_COMMENT);}
 <SINGLE_LINE_COMMENT>{
-    [^\n]+  ;
+    [^\n]+
+// Error: Expected space here
+// --------------------------
 	\n      BEGIN(INITIAL);
+// Error: Illegal character in this context
+// ----------------------------------------
 	<<EOF>> BEGIN(INITIAL);
 }
 <MULTI_LINE_COMMENT>{
 	\*+\/   {
-	            nestingDepth--;
-				if (nestingDepth == 0)
+	            commentNestingDepth--;
+				if (commentNestingDepth == 0)
 					BEGIN(INITIAL);
 	        }
-	"/*"    nestingDepth++;
-    [^*]+   ;
-	\*+     ;
+	"/*"    commentNestingDepth++;
+    [^*]+   
+// Error: Empty semantic action, must be at least a comment
+// --------------------------------------------------------
+	\*+    
+// Error: Empty semantic action, must be at least a comment
+// --------------------------------------------------------
 	<<EOF>> {
 	            BEGIN(INITIAL);
 	            this.report.SyntaxError(37, this.yylloc); 
@@ -144,7 +163,7 @@ WHITESPACE      [ \t\n\r]+
 				   BEGIN(INITIAL);
 			   } 
 }
-<ASCII_STRING>{
+<ASCIISTR>{
 	[^$'\n]+   {
 	               this.String += this.yytext; 
 				   this.CheckStringLength(this.String);                   
@@ -173,7 +192,7 @@ WHITESPACE      [ \t\n\r]+
 				   return (int)Tokens.STRING_LIT;
                }
 }
-<UNICODE_STRING>{
+<UNICODESTR>{
 	[^$\"\n]+   {
 	                this.String += yytext; 
 					this.CheckWStringLength(this.String);
@@ -241,7 +260,7 @@ private bool flag;
 
 private int commentLen;
 
-private int nestingDepth;
+private int commentNestingDepth;
 
 private string String;
 
@@ -348,13 +367,21 @@ private ulong BinaryToInt(string text)
 
 private bool ValidDate(int year, int month, int day)
 {
+	bool result = true;
+
 	if (year < 1 || year > 9999)
-		return false;
-	else if (month < 1 || month > 12)
-		return false;
-	else if (day < 1 || day > DateTime.DaysInMonth(year, month))
-		return false;
-	return true;
+	{
+		result = false;
+	}
+	if (month < 1 || month > 12)
+	{
+		result = false;
+	}
+	if (day < 1 || day > DateTime.DaysInMonth(year, month))
+	{
+		result = false;
+	}
+	return result;
 }
 
 private bool ValidTimeOfDay(int hour, int minute, int second, int millisec)
@@ -801,4 +828,5 @@ public void DoPushBack(bool doPushDummyToken)
 public override void yyerror(string msg, params object[] args)
 {
 	this.report.SyntaxError(msg, this.yylloc);
-}
+}// ==========================================================================
+

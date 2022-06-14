@@ -49,6 +49,9 @@
     <LangVersion>7.3</LangVersion>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -64,6 +67,7 @@
     <Compile Include="ConstantPool.cs" />
     <Compile Include="DisAssembler.cs" />
     <Compile Include="GppgSemanticStack.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -92,6 +96,8 @@
     <Compile Include="STLangDataTypes\ElementaryDataTypes\DateTimeDataTypes\TimeOfDayType.cs" />
     <Compile Include="STLangDataTypes\ElementaryDataTypes\DateTimeDataTypes\TimeType.cs" />
     <Compile Include="STLangDataTypes\ElementaryDataTypes\EnumeratedType.cs" />
+    <Compile Include="STLangDataTypes\ElementaryDataTypes\NamedValueType.cs" />
+    <Compile Include="STLangParserUtility\NamedValue.cs" />
     <Compile Include="STLangDataTypes\ElementaryDataTypes\RealDataTypes\LRealType.cs" />
     <Compile Include="STLangDataTypes\ElementaryDataTypes\RealDataTypes\RealType.cs" />
     <Compile Include="STLangDataTypes\ElementaryDataTypes\SignedIntDataTypes\DIntType.cs" />
@@ -326,6 +332,7 @@
     <Compile Include="STLangParserUtility\FunctionCall.cs" />
     <Compile Include="STLangParserUtility\IndexedVariable.cs" />
     <Compile Include="STLangParserUtility\InputParameter.cs" />
+    <Compile Include="STLangParserUtility\NamedValueList.cs" />
     <Compile Include="STLangParserUtility\OutputParameter.cs" />
     <Compile Include="STLangParserUtility\POUCall.cs" />
     <Compile Include="STLangParserUtility\POUParameter.cs" />
@@ -386,6 +393,7 @@
     <Compile Include="STLangSymbols\MiscSymbols\EnumSymbol.cs" />
     <Compile Include="STLangSymbols\MiscSymbols\FieldSymbol.cs" />
     <Compile Include="STLangSymbols\MiscSymbols\FunctionBlockInstanceSymbol.cs" />
+    <Compile Include="STLangSymbols\MiscSymbols\NamedValueSymbol.cs" />
     <Compile Include="STLangSymbols\MiscSymbols\StructInstanceSymbol.cs" />
     <Compile Include="STLangSymbols\MiscSymbols\TypeConverterSymbol.cs" />
     <Compile Include="STLangSymbols\MiscSymbols\TypeNameSymbol.cs" />

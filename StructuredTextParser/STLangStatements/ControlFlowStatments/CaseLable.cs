@@ -9,9 +9,9 @@ namespace STLang.Expressions
 {
     public abstract class CaseLabel
     {
-        public abstract bool AreDisjoint(SubrangeLabel label);
+        public abstract bool IsDisjoint(SubrangeLabel label);
 
-        public abstract bool AreDisjoint(NumericLabel label);
+        public abstract bool IsDisjoint(NumericLabel label);
     }
 
     public class SubrangeLabel : CaseLabel
@@ -21,12 +21,12 @@ namespace STLang.Expressions
             this.subRange = subRange;
         }
 
-        public override bool AreDisjoint(SubrangeLabel label)
+        public override bool IsDisjoint(SubrangeLabel label)
         {
-            return label.subRange.AreDisjoint(this.subRange);
+            return label.subRange.IsDisjoint(this.subRange);
         }
 
-        public override bool AreDisjoint(NumericLabel label)
+        public override bool IsDisjoint(NumericLabel label)
         {
             return ! this.subRange.Contains(label.Value);
         }
@@ -56,12 +56,12 @@ namespace STLang.Expressions
             this.value = value;
         }
 
-        public override bool AreDisjoint(SubrangeLabel label)
+        public override bool IsDisjoint(SubrangeLabel label)
         {
             return !label.SubRange.Contains(this.value);
         }
 
-        public override bool AreDisjoint(NumericLabel label)
+        public override bool IsDisjoint(NumericLabel label)
         {
             object constant1 = this.value.Evaluate();
             object constant2 = label.Value.Evaluate();

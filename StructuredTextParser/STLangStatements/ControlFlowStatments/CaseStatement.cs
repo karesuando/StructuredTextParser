@@ -759,7 +759,7 @@ namespace STLang.Statements
 
         public bool Contains(NumericLabel number)
         {
-            return this.LabelList.Find(caseLabel => caseLabel.AreDisjoint(number)) != null;
+            return this.LabelList.Find(caseLabel => caseLabel.IsDisjoint(number)) != null;
         }
 
         public void GenerateStatements(List<int> exitList)

@@ -24,7 +24,7 @@ namespace STLang.Subranges
             throw new NotImplementedException("Compiler Error: Method ErrorSubRange.Contains(Expression) not implemented.");
         }
 
-        public override bool AreDisjoint(SubRange subRange)
+        public override bool IsDisjoint(SubRange subRange)
         {
             throw new NotImplementedException("Compiler Error: Method ErrorSubRange.IsDisjoint(SubRange) not implemented.");
         }
