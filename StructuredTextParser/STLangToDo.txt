@@ -1,0 +1,10 @@
+Subranges:
+    Rewrite class SubRange using template base class SubRange<T>.
+
+Memory management:
+    Store variables of different types contiguously in memory. Add padding, 
+    if necessary, so that the address of a variable is divisible by 
+    it's size. Need to make changes in STLangRuntime.
+
+Classes:
+    Add classes + methods.

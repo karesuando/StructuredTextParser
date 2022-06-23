@@ -114,6 +114,24 @@ namespace STLang.KeyWords
             this.Add("END_TRANSITION", Tokens.END_TRANSITION);
             this.Add("WITH", Tokens.WITH);
             this.Add("TASK", Tokens.TASK);
+            this.Add("CLASS", Tokens.CLASS);
+            this.Add("END_CLASS", Tokens.END_CLASS);
+            this.Add("METHOD", Tokens.METHOD);
+            this.Add("END_METHOD", Tokens.END_METHOD);
+            this.Add("PUBLIC", Tokens.PUBLIC);
+            this.Add("PRIVATE", Tokens.PRIVATE);
+            this.Add("PROTECTED", Tokens.PROTECTED);
+            this.Add("FINAL", Tokens.FINAL);
+            this.Add("INTERNAL", Tokens.INTERNAL);
+            this.Add("EXTENDS", Tokens.EXTENDS);
+            this.Add("OVERRIDE", Tokens.OVERRIDE);
+            this.Add("ABSTRACT", Tokens.ABSTRACT);
+            this.Add("THIS", Tokens.THIS);
+            this.Add("SUPER", Tokens.SUPER);
+            this.Add("REF", Tokens.REF);
+            this.Add("REF_TO", Tokens.REF_TO);
+            this.Add("INTERFACE", Tokens.INTERFACE);
+            this.Add("END_INTERFACE", Tokens.END_INTERFACE);
             this.Add("(*WHEN*)", Tokens.WHEN); // Dummy token used to mark beginning of a case_element
         }
 

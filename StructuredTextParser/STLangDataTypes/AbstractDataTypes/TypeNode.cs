@@ -177,6 +177,11 @@ namespace STLang.DataTypes
             get { return false; }
         }
 
+        public virtual bool IsNamedValueType
+        {
+            get { return false; }
+        }
+
         public virtual TypeNode BaseType
         {
             get { return this; }

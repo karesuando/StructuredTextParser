@@ -1,17 +1,14 @@
-﻿using System;
-using System.Linq;
-using System.Text;
-using System.Collections;
-using System.Collections.Generic;
-using STLang.Symbols;
-using STLang.DataTypes;
-using STLang.Statements;
-using STLang.Expressions;
-using STLang.ErrorManager;
-using STLang.MemoryLayout;
-using STLang.VMInstructions;
+﻿using QUT.Gppg;
 using STLang.ConstantTokens;
-using QUT.Gppg;
+using STLang.DataTypes;
+using STLang.ErrorManager;
+using STLang.Expressions;
+using STLang.MemoryLayout;
+using STLang.Statements;
+using STLang.Symbols;
+using STLang.VMInstructions;
+using System;
+using System.Collections.Generic;
 
 
 namespace STLang.SymbolTable
@@ -411,16 +408,16 @@ namespace STLang.SymbolTable
             symbolDictionary[this.scopeLevel][key] = typeNameSymbol;
         }
 
-        public void InstallNamedValue(string name, Expression value, TypeNode dataType)
+        public void InstallNamedValue(string name, Expression value, TypeNode dataType, string typeName)
         {
-            string key = dataType.Name + "#" + name;
+            string key = typeName + "#" + name;
 
             key = key.ToUpper();
-            if (symbolDictionary[SYSTEM_LEVEL].ContainsKey(name)) {
+            if (! symbolDictionary[scopeLevel].ContainsKey(key)) {
+                NamedValueSymbol namedValueSymbol;
 
-            }
-            else {
-
+                namedValueSymbol = new NamedValueSymbol(key, dataType, value);
+                symbolDictionary[scopeLevel][key] = namedValueSymbol;
             }
         }
 
@@ -434,7 +431,7 @@ namespace STLang.SymbolTable
             {
                 key = enumConst.ToUpper();
                 enumSymbol = new EnumSymbol(enumConst, enumType, enumValue++);
-                symbolDictionary[this.scopeLevel][key] = enumSymbol;
+                symbolDictionary[scopeLevel][key] = enumSymbol;
             }
         }
 
@@ -452,7 +449,7 @@ namespace STLang.SymbolTable
                 qualifiedEnumConst = typeName + "#" + enumConst;
                 enumSymbol = new EnumSymbol(qualifiedEnumConst, derivedType, enumValue++);
                 key = qualifiedEnumConst.ToUpper();
-                symbolDictionary[this.scopeLevel][key] = enumSymbol;
+                symbolDictionary[scopeLevel][key] = enumSymbol;
             }
             EnumeratedType.AddTypeName(typeName);
         }
@@ -544,7 +541,8 @@ namespace STLang.SymbolTable
             string qualifiedName;
             foreach (string typeName in EnumeratedType.TypeNames)
             {
-                qualifiedName = typeName.ToUpper() + "#" + ident;
+                qualifiedName = typeName + "#" + ident;
+                qualifiedName = qualifiedName.ToUpper();
                 for (int i = this.scopeLevel; i >= SYSTEM_LEVEL; i--)
                 {
                     if (symbolDictionary[i].ContainsKey(qualifiedName))
@@ -557,7 +555,8 @@ namespace STLang.SymbolTable
             }
             foreach (string typeName in NamedValueType.TypeNames)
             {
-                qualifiedName = typeName.ToUpper() + "#" + ident;
+                qualifiedName = typeName + "#" + ident;
+                qualifiedName = qualifiedName.ToUpper();
                 for (int i = this.scopeLevel; i >= SYSTEM_LEVEL; i--)
                 {
                     if (symbolDictionary[i].ContainsKey(qualifiedName))
@@ -668,14 +667,15 @@ namespace STLang.SymbolTable
                     return true;
                 } 
             }
-            // Check if name is an unqualified enumerated constant
+            // Check if name is an unqualified enumerated or named value constant
 
             string qualifiedName;
-            List<TypeNode> uniqueDataTypeList = new List<TypeNode>();
+            List<TypeNode> uniqueEnumDataTypeList = new List<TypeNode>();
             
             foreach (string typeName in EnumeratedType.TypeNames)
             {
-                qualifiedName = typeName.ToUpper() + "#" + ident;
+                qualifiedName = typeName + "#" + ident;
+                qualifiedName = qualifiedName.ToUpper();
                 for (int i = this.scopeLevel; i >= 0; i--)
                 {
                     if (symbolDictionary[i].ContainsKey(qualifiedName))
@@ -684,23 +684,44 @@ namespace STLang.SymbolTable
                         Predicate<TypeNode> equivalentTypes;
                         enumSymbol = symbolDictionary[i][qualifiedName];
                         equivalentTypes = dt => dt == enumSymbol.DataType;
-                        if (!uniqueDataTypeList.Exists(equivalentTypes))
-                            uniqueDataTypeList.Add(enumSymbol.DataType);
+                        if (!uniqueEnumDataTypeList.Exists(equivalentTypes))
+                            uniqueEnumDataTypeList.Add(enumSymbol.DataType);
                         if (symbol == null)
                             symbol = enumSymbol;
                     }
                 }
             }
-            if (uniqueDataTypeList.Count == 0)
-                return false; // Error. Undefined symbol
-            else if (uniqueDataTypeList.Count == 1)
-                return true;
-            else
+            List<TypeNode> uniqueNamedValueDataTypeList = new List<TypeNode>();
+            foreach (string typeName in NamedValueType.TypeNames)
             {
+                qualifiedName = typeName + "#" + ident;
+                qualifiedName = qualifiedName.ToUpper();
+                for (int i = this.scopeLevel; i >= SYSTEM_LEVEL; i--)
+                {
+                    if (symbolDictionary[i].ContainsKey(qualifiedName))
+                    {
+                        STLangSymbol namedValueSymbol;
+                        Predicate<TypeNode> equivalentTypes;
+
+                        namedValueSymbol = symbolDictionary[i][qualifiedName];
+                        equivalentTypes = dt => dt == namedValueSymbol.DataType;
+                        if (!uniqueNamedValueDataTypeList.Exists(equivalentTypes))
+                            uniqueNamedValueDataTypeList.Add(namedValueSymbol.DataType);
+                        if (symbol == null)
+                            symbol = namedValueSymbol;
+                    }
+                }
+            }
+            int uniqueDataTypeCount = uniqueEnumDataTypeList.Count 
+                                    + uniqueNamedValueDataTypeList.Count;
+            if (uniqueDataTypeCount == 0)
+                return false; // Error. Undefined symbol
+            else if (uniqueDataTypeCount == 1)
+                return true; // Unique enumerated or named value symbol found
+            else {
                 // Error. 'name' is ambiguous
                 if (location != null)
                     this.report.SemanticError(112, name, location);
-                symbol = new EnumSymbol(name, TypeNode.Error, 0);
                 return true;
             }
         }
