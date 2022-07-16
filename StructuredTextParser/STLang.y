@@ -522,7 +522,7 @@ case_stat_list  : {this.PushTop();} statement ';' {$$ = this.MakeCaseStatList($2
 				;
 
 // WHEN is a dummy token returned by the scanner to mark the begining of a constant
-// list. The token is used to resolve a conflict that arises in the grammar for the
+// list. The token is used to resolve a conflict that arises in the grammar of the
 // CASE-statement.
 		
 case_element    : WHEN case_label_list ':' case_stat_list {$$ = this.MakeCaseElement($2, $4);}
