@@ -84,7 +84,9 @@
 			   VAR_TEMP VAR_ACCESS VAR_CONFIG END_VAR CONSTANT RETAIN NON_RETAIN 
 			   TRUE FALSE RETURN READ_ONLY WRITE_ONLY READ_WRITE DUMMY_TOKEN
 			   CONFIGURATION END_CONFIGURATION INITIAL_STEP END_STEP RESOURCE
-			   END_RESOURCE WITH TASK TRANSITION END_TRANSITION WHEN
+			   END_RESOURCE WITH TASK TRANSITION END_TRANSITION WHEN REF REF_TO
+			   CLASS END_CLASS METHOD END_METHOD PUBLIC PRIVATE PROTECTED FINAL
+			   INTERNAL EXTENDS OVERRIDE ABSTRACT THIS SUPER INTERFACE END_INTERFACE
 
 %token <LInt>      INT_LIT
 %token <LReal>     REAL_LIT
@@ -116,6 +118,7 @@
 %type <Object> case_element function_decl
 %type <DataType> elementary_type array_type structure_type subrange_type enumerated_type
 	  derived_type non_generic_type string_type data_type generic_type namedvalue_type
+	  opt_function_result
 %type <Expression> expression constant condition_DO condition_THEN expression_OF 
 	  variable simple_variable symbolic_variable initial_value until_condition 
 	  control_variable optional_by_stat initializer
@@ -284,15 +287,15 @@ string_type     : STRING '[' expression ']'          {$$ = this.MakeStringType($
 subrange_type   : non_generic_type '(' {this.SubrangeTypeStart($1);} subrange ')'       {$$ = this.MakeSubrangeType($1, $4, @4);}
 				;
 
-namedvalue_type : namedvalue_list ')'
-                | namedvalue_list error ')'           {yyerrok();}
+namedvalue_type : namedvalue_list ')'                 {$$ = this.MakeNamedValueType($1);}
+                | namedvalue_list error ')'           {$$ = this.MakeNamedValueType($1); yyerrok();}
                 ;
 
 namedvalue_list : elementary_type '(' named_value     {$$ = this.MakeNamedValueList($1, $3);}
                 | namedvalue_list ',' named_value     {$$ = this.AddNamedValue($1, $3);}
                 ;
 
-named_value     :  IDENT ASSIGN expression         {$$ = this.MakeNamedValue($1, $3, @1, @3);}
+named_value     :  IDENT ASSIGN expression            {$$ = this.MakeNamedValue($1, $3, @1, @3);}
                 ;
 
 array_init_seq  : '[' {this.PushArrayElemType(@1);} initializer {$$ = this.MakeArrayInitializer($3, @3);    }
@@ -560,23 +563,25 @@ assignment_stat : variable ASSIGN expression {$$ = this.MakeAssignmentStatement(
 
 function_body   : statement_list END_FUNCTION         {$$ = this.CheckFunctionValueDefinition($1, @2);}
                 | statement_list error END_FUNCTION   {$$ = $1;this.yyerrok();}
-//				| instruction_list END_FUNCTION_BLOCK {$$ = $1;}
 				;
 
 function_block_body 
 				: statement_list END_FUNCTION_BLOCK       {$$ = $1;}
 				| statement_list error END_FUNCTION_BLOCK {$$ = $1; this.yyerrok();}
-//				| instruction_list END_FUNCTION_BLOCK     {$$ = $1;}
 				;
 
 program_body    : statement_list END_PROGRAM              {$$ = $1;}
                 | statement_list error END_PROGRAM        {$$ = $1; this.yyerrok();}
-//				| instruction_list END_PROGRAM            {$$ = StatementList.Empty;}
 				;
 
-function_decl   : FUNCTION IDENT ':' non_generic_type {this.PushSymbolTable(0);}
-					 pou_variable_decls {this.InstallFunctionProtoType($2, $4, $6, @1);} 
-					 function_body {this.SaveFunctionDefinition($6, $8);} 
+opt_function_result
+                : ':' non_generic_type  {$$ = $2;}
+                |                       {$$ = TypeNode.Void;}
+				;
+
+function_decl   : FUNCTION IDENT opt_function_result {this.PushSymbolTable(0);}
+					 pou_variable_decls {this.InstallFunctionProtoType($2, $3, $5, @1);} 
+					 function_body      {this.SaveFunctionDefinition($5, $7);} 
 				;
 				
 function_block_decl 
@@ -848,39 +853,172 @@ opt_decl_qualifier
 		return identList;
 	}
 
-	private NamedValueList MakeNamedValueList(TypeNode dataType, NamedValue namedValue)
+	private TypeNode MakeNamedValueType(NamedValueList namedValues)
 	{
-		Expression expression;
-		if (namedValue == null) 
-			expression = Expression.Error;
+		if (namedValues == null)
+			return TypeNode.Error;
 		else {
-			expression = namedValue.Value;
+			var namedValueType = new NamedValueType(derivedTypeName, namedValues.DataType, namedValues.InitialValue);
 
-			if (expression != null)
-			{
-			    if (! expression.IsConstant)
-					this.report.SemanticError(193, namedValue.Name, namedValue.IdLoc);
-				if (value.DataType != dataType)
-				{
-				}
-			}
+			foreach (KeyValuePair<string, Expression> pair in namedValues.NamedValues)
+				namedValueType.Add(pair.Key);
+			return namedValueType;
 		}
-		return new NamedValueList(namedValue, dataType);
 	}
 
-	private NamedValueList AddNamedValue(NamedValueList namedValueDecl, NamedValue namedValue)
+	private NamedValueList MakeNamedValueList(TypeNode dataType, NamedValue namedValue)
 	{
-		if (namedValueDecl == null)
-			return new NamedValueList(namedValue, TypeNode.Error);
+		if (namedValue == null)
+			return new NamedValueList(dataType);
 		else {
-			namedValueDecl.Add(namedValue);
-			return namedValueDecl;
+			namedValue = CheckNamedValue(namedValue, dataType);
+			this.symbolTable.InstallNamedValue(namedValue.Name, namedValue.Value, dataType, derivedTypeName);
+			return new NamedValueList(namedValue.Name, namedValue.Value, dataType);
+		}
+	}
+
+	//
+	// Check type compatibility in assignment of named values and perform conversions,  
+	// if necessary, from float -> double, int -> double, int -> float etc.
+	//
+	private NamedValue CheckNamedValue(NamedValue namedValue, TypeNode dataType)
+	{
+		if (namedValue == null) 
+		{
+			Expression value = dataType.DefaultValue;
+			LexLocation loc = new LexLocation(0, 0, 0, 0);
+			return new NamedValue("#DUMMY-NAME#", value, loc, loc);
+		}
+		else {
+			Expression expression = namedValue.Value;
+
+			if (expression == null || expression == Expression.Error)
+				namedValue.Value = dataType.DefaultValue;
+			else {
+				if (! expression.IsConstant)
+					this.report.SemanticError(193, namedValue.Name, namedValue.IdLoc);
+				if (expression.DataType != dataType)
+				{
+					if (expression.IsConstant) {
+						if (dataType == TypeNode.LReal)
+						{
+							if (expression.DataType == TypeNode.Real)
+							{
+								float floatValue = (float)expression.Evaluate();
+								string stringValue = expression.ToString();
+								TokenDouble doubleVal = new TokenDouble((double)floatValue, stringValue);
+								namedValue.Value = this.MakeConstant(doubleVal);
+								return namedValue;
+							}
+							else if (expression.DataType.IsIntegerType)
+							{
+								long longValue = (long)expression.Evaluate();
+								string stringValue = expression.ToString();
+								TokenDouble doubleVal = new TokenDouble((double)longValue, stringValue);
+								namedValue.Value = this.MakeConstant(doubleVal);
+								return namedValue;
+							}
+						}
+						else if (dataType == TypeNode.Real)
+						{
+							if (expression.DataType.IsIntegerType)
+							{
+								long longValue = (long)expression.Evaluate();
+								namedValue.Value = MakeConstant((float)longValue);
+								return namedValue;
+							}
+							else if (expression.DataType == TypeNode.LReal)
+							{
+								string typeName = expression.DataType.Name;
+								double doubleValue = (double)expression.Evaluate();
+								namedValue.Value = MakeConstant((float)doubleValue);
+								this.report.Warning(29, typeName, dataType.Name, namedValue.ValueLoc);
+								return namedValue;
+							}
+						}
+						else if (dataType.IsIntegerType)
+						{
+							if (expression.DataType.IsIntegerType)
+							{
+								if (expression.DataType.Size > dataType.Size)
+								{
+									string typeName = expression.DataType.Name;
+									long longValue = (long)expression.Evaluate();
+									if (dataType.Size == 1)
+										longValue = (sbyte)longValue;
+									else if (dataType.Size == 2)
+										longValue = (short)longValue;
+									else if (dataType.Size == 4)
+										longValue = (int)longValue;
+									namedValue.Value = MakeConstant(longValue);
+									this.report.Warning(29, typeName, dataType.Name, namedValue.ValueLoc);
+								}
+								return namedValue;
+							}
+							else if (expression.DataType.IsBitStringType)
+							{
+								if (expression.DataType.Size > dataType.Size)
+								{
+									string typeName = expression.DataType.Name;
+									ulong longValue = (ulong)expression.Evaluate();
+									if (dataType.Size == 1)
+										longValue = (byte)longValue;
+									else if (dataType.Size == 2)
+										longValue = (ushort)longValue;
+									else if (dataType.Size == 4)
+										longValue = (uint)longValue;
+									namedValue.Value = MakeConstant((long)longValue);
+									this.report.Warning(29, typeName, dataType.Name, namedValue.ValueLoc);
+								}
+								return namedValue;
+							}
+						}
+						else if (dataType.IsBitStringType)
+						{
+							if (expression.DataType.IsIntegerType || expression.DataType.IsBitStringType)
+							{
+								if (expression.DataType.Size > dataType.Size)
+								{
+									string typeName = expression.DataType.Name;
+									ulong longValue = (ulong)expression.Evaluate();
+									if (dataType.Size == 1)
+										longValue = (byte)longValue;
+									else if (dataType.Size == 2)
+										longValue = (ushort)longValue;
+									else if (dataType.Size == 4)
+										longValue = (uint)longValue;
+									namedValue.Value = MakeConstant(longValue);
+									this.report.Warning(29, typeName, dataType.Name, namedValue.ValueLoc);
+								}
+								return namedValue;
+							}
+						}
+					}
+					this.report.SemanticError(64, expression.DataType.Name, dataType.Name, namedValue.ValueLoc);
+				}
+			}
+			return namedValue;
+		}
+	}
+
+	private NamedValueList AddNamedValue(NamedValueList namedValueList, NamedValue namedValue)
+	{
+		if (namedValueList == null)
+			return new NamedValueList(namedValue.Name, namedValue.Value, TypeNode.Error);
+		else {
+			namedValue = CheckNamedValue(namedValue, namedValueList.DataType);
+			namedValueList.Add(namedValue.Name, namedValue.Value);
+			this.symbolTable.InstallNamedValue(namedValue.Name, namedValue.Value, namedValueList.DataType, derivedTypeName);
+			return namedValueList;
 		}
 	}
 
 	private NamedValue MakeNamedValue(string name, Expression value, LexLocation idLoc, LexLocation valueLoc)
 	{
-		return new NamedValue(name, value, idLoc, valueLoc);
+		if (! this.symbolTable.IsValidUserDefinedSymbol(name, idLoc))
+			return null;
+		else
+			return new NamedValue(name, value, idLoc, valueLoc);
 	}
 
 	private List<string> AddIdentToList(List<string> identList, string ident, LexLocation location)

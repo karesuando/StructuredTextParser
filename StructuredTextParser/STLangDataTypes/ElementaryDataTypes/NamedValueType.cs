@@ -8,31 +8,24 @@ using System.Threading.Tasks;
 
 namespace STLang.DataTypes
 {
-    public class NamedValueType : TypeNode
+    public class NamedValueType : DerivedType
     {
         static NamedValueType()
         {
             typeNames = new List<string>();
         }
-        public NamedValueType(string name, TypeNode baseType)
-            : base(name, baseType.Size, baseType.TypeID)
-        {
-            this.baseType = baseType;
-            this.initialValue = baseType.DefaultValue;
-            this.names = new List<string>();
-        }
 
-        public NamedValueType(string name, TypeNode baseType, Expression initialValue)
-            : base(name, baseType.Size, baseType.TypeID)
+        public NamedValueType(string typeName, TypeNode baseType, Expression initialValue)
+            : base(typeName, baseType, initialValue)
         {
-            this.baseType = baseType;
+            typeNames.Add(typeName);
             this.initialValue = initialValue;
-            this.names = new List<string>();
+            this.valueNames = new List<string>();
         }
 
         public void Add(string name)
         {
-            this.names.Add(name);
+            this.valueNames.Add(name);
         }
 
         public static IEnumerable<string> TypeNames
@@ -40,10 +33,9 @@ namespace STLang.DataTypes
             get { return typeNames; }
         }
 
-        public override TypeNode BaseType { get { return baseType; } }
+        public override bool IsNamedValueType { get { return true; } }
 
-        private readonly TypeNode baseType;
-        private readonly List<string> names;
+        private readonly List<string> valueNames;
         private static readonly List<string> typeNames;
     }
 }

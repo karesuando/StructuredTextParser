@@ -190,9 +190,9 @@ namespace STLang.ErrorManager
 
         private int warnings;
 
-        private List<string> errorMessages;
+        private readonly List<string> errorMessages;
 
-        private List<string> warningMessages;
+        private readonly List<string> warningMessages;
 
         static private readonly Hashtable errorMessage;
 
