@@ -720,8 +720,7 @@ namespace STLang.SymbolTable
                 return true; // Unique enumerated or named value symbol found
             else {
                 // Error. 'name' is ambiguous
-                if (location != null)
-                    this.report.SemanticError(112, name, location);
+                this.report.SemanticError(112, name, location);
                 return true;
             }
         }

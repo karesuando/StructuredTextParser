@@ -27,7 +27,10 @@ namespace STLang.ErrorManager
 
         private string GetLineAndColumn(LexLocation location)
         {
-            return "<" + location.StartLine + "," + location.StartColumn + ">";
+            if (location == null)
+                return "";
+            else
+                return "<" + location.StartLine + "," + location.StartColumn + ">";
         }
 
         public void SemanticError(string msg, LexLocation location)
